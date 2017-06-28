@@ -81,7 +81,7 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
 
     public UnidadeSaude findById(long id) {
         for (UnidadeSaude esp: vetor) {
-            if (esp.getCodigo() == id) {
+            if (esp != null && esp.getCodigo() == id) {
                 return esp;
             }
         }
