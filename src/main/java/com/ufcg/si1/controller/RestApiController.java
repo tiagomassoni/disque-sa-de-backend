@@ -254,14 +254,12 @@ public class RestApiController {
 
     @RequestMapping(value="/unidade/busca", method= RequestMethod.GET)
     public ResponseEntity<?> consultarUnidadeSaudePorBairro(@RequestParam(value = "bairro", required = true) String bairro){
-        System.out.println("Busca por " + bairro);
         UnidadeSaude us = unidadeSaudeService.findByBairro(bairro);
         if (us == null) {
             return new ResponseEntity(new CustomErrorType("Unidade with bairro " + bairro
                     + " not found"), HttpStatus.NOT_FOUND);
         }
 
-        System.out.println("Busca por bairro : " + us.getDescricao());
         return new ResponseEntity<UnidadeSaude>(us, HttpStatus.OK);
     }
 

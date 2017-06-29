@@ -91,7 +91,6 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
     @Override
     public UnidadeSaude findByBairro(String bairro) {
         for (UnidadeSaude esp: vetor) {
-            System.out.println("Busca por bairro1");
             if (esp.getDescricao().equals(bairro)) {
                 return esp;
             }
