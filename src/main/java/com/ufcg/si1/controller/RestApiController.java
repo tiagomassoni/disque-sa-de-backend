@@ -19,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class RestApiController {
 
     QueixaService queixaService = new QueixaServiceImpl();
@@ -204,6 +205,10 @@ public class RestApiController {
 
         UnidadeSaude unidade = unidadeSaudeService.findById(id);
 
+        if(unidade == null){
+            return new ResponseEntity<ObjWrapper<Double>>(HttpStatus.NOT_FOUND);
+        }
+
         double c = 0.0;
         if (unidade instanceof Hospital)
             c = ((Hospital) unidade).medicos()
@@ -213,7 +218,6 @@ public class RestApiController {
                     / ((PostoSaude) unidade).taxaDiaria();
 
         return new ResponseEntity<ObjWrapper<Double>>(new ObjWrapper<Double>(new Double(c)), HttpStatus.OK);
-
     }
 
     @RequestMapping(value = "/geral/situacao", method = RequestMethod.GET)
