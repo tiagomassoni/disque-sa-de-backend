@@ -63,9 +63,10 @@ public class RestApiController {
         }
         queixaService.saveQueixa(queixa);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/api/queixa/{id}").buildAndExpand(queixa.getId()).toUri());
-        return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+       // HttpHeaders headers = new HttpHeaders();
+        //headers.setLocation(ucBuilder.path("/api/queixa/{id}").buildAndExpand(queixa.getId()).toUri());
+
+        return new ResponseEntity<Queixa>(queixa, HttpStatus.CREATED);
     }
 
 
