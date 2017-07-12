@@ -9,15 +9,15 @@ import java.util.List;
 
 
 public interface UnidadeSaudeService {
-    UnidadeSaude procura(int codigo) throws RepositorioException,
+    Object procura(int codigo) throws RepositorioException,
             ObjetoInexistenteException;
 
-    List<UnidadeSaude> getAll();
+    List<Object> getAll();
 
-    void insere(UnidadeSaude us)throws RepositorioException,
+    void insere(Object us)throws RepositorioException,
             ObjetoJaExistenteException;
 
     boolean existe(int codigo);
 
-    UnidadeSaude findById(long id);
+    Object findById(long id);
 }

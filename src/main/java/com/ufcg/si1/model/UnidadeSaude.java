@@ -10,7 +10,6 @@ import java.util.List;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = Hospital.class, name = "hospital"),
         @JsonSubTypes.Type(value = PostoSaude.class, name = "posto")
 })
 public class UnidadeSaude {

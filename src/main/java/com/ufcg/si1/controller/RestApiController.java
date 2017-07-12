@@ -1,5 +1,6 @@
 package com.ufcg.si1.controller;
 
+import br.edu.ufcg.Hospital;
 import com.ufcg.si1.model.*;
 import com.ufcg.si1.service.*;
 import com.ufcg.si1.util.CustomErrorType;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -124,7 +126,7 @@ public class RestApiController {
     @RequestMapping(value = "/especialidade/unidades", method = RequestMethod.GET)
     public ResponseEntity<?> consultaEspecialidadeporUnidadeSaude(@RequestBody int codigoUnidadeSaude) {
 
-        UnidadeSaude us = null;
+        Object us = null;
         try {
             us = unidadeSaudeService.procura(codigoUnidadeSaude);
         } catch (RepositorioException e) {
@@ -132,15 +134,27 @@ public class RestApiController {
         } catch (ObjetoInexistenteException e) {
             return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
         }
+        if (us instanceof UnidadeSaude){
+            UnidadeSaude us1 = (UnidadeSaude) us;
+            return new ResponseEntity<>(us1.getEspecialidades(), HttpStatus.OK);
+        }
 
-        return new ResponseEntity<List<Especialidade>>(us.getEspecialidades(), HttpStatus.OK);
+        return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = "/unidade/", method = RequestMethod.GET)
     public ResponseEntity<?> getAllUnidades() {
-        List<UnidadeSaude> unidades = unidadeSaudeService.getAll();
+        List<Object> unidades = unidadeSaudeService.getAll();
         if (unidades.isEmpty()) return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
-        else return new ResponseEntity<List<UnidadeSaude>>(unidades, HttpStatus.OK);
+        else{
+            List<UnidadeSaude> unidadeSaudes = new ArrayList<>();
+            for (Object  saude: unidades) {
+                if(saude instanceof UnidadeSaude){
+                    unidadeSaudes.add((UnidadeSaude) saude);
+                }
+            }
+            return new ResponseEntity<>(unidadeSaudes, HttpStatus.OK);
+        }
     }
 
     @RequestMapping(value = "/especialidade/", method = RequestMethod.POST)
@@ -191,32 +205,32 @@ public class RestApiController {
     @RequestMapping(value = "/unidade/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> consultarUnidadeSaude(@PathVariable("id") long id) {
 
-        UnidadeSaude us = unidadeSaudeService.findById(id);
+        Object us = unidadeSaudeService.findById(id);
         if (us == null) {
             return new ResponseEntity(new CustomErrorType("Unidade with id " + id
                     + " not found"), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<UnidadeSaude>(us, HttpStatus.OK);
+        return new ResponseEntity<>(us, HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/geral/medicos/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> calcularMediaMedicoPacienteDia(@PathVariable("id") long id) {
 
-        UnidadeSaude unidade = unidadeSaudeService.findById(id);
+        Object unidade = unidadeSaudeService.findById(id);
 
         if(unidade == null){
             return new ResponseEntity<ObjWrapper<Double>>(HttpStatus.NOT_FOUND);
         }
 
         double c = 0.0;
-        if (unidade instanceof Hospital)
-            c = ((Hospital) unidade).medicos()
-                    / ((Hospital) unidade).getNumeroPacientesDia();
-        else
+        if (unidade instanceof PostoSaude)
             c = ((PostoSaude) unidade).getAtendentes()
                     / ((PostoSaude) unidade).taxaDiaria();
-
+        else if (unidade instanceof Hospital){
+            c = ((Hospital) unidade).getNumeroMedicos()
+                    / ((Hospital) unidade).getNumeroPacientesDia();
+        }
         return new ResponseEntity<ObjWrapper<Double>>(new ObjWrapper<Double>(new Double(c)), HttpStatus.OK);
     }
 
