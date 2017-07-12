@@ -65,9 +65,10 @@ public class RestApiController {
         }
         queixaService.saveQueixa(queixa);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/api/queixa/{id}").buildAndExpand(queixa.getId()).toUri());
-        return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+       // HttpHeaders headers = new HttpHeaders();
+        //headers.setLocation(ucBuilder.path("/api/queixa/{id}").buildAndExpand(queixa.getId()).toUri());
+
+        return new ResponseEntity<Queixa>(queixa, HttpStatus.CREATED);
     }
 
 
@@ -264,6 +265,17 @@ public class RestApiController {
         //1: REGULAR
         //2: BOM
         return new ResponseEntity<ObjWrapper<Integer>>(new ObjWrapper<Integer>(2), HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/unidade/busca", method= RequestMethod.GET)
+    public ResponseEntity<?> consultarUnidadeSaudePorBairro(@RequestParam(value = "bairro", required = true) String bairro){
+        Object us = unidadeSaudeService.findByBairro(bairro);
+        if (us == null && !(us instanceof UnidadeSaude)) {
+            return new ResponseEntity(new CustomErrorType("Unidade with bairro " + bairro
+                    + " not found"), HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<UnidadeSaude>((UnidadeSaude) us, HttpStatus.OK);
     }
 
     private double numeroQueixasAbertas() {

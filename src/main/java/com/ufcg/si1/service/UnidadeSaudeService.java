@@ -20,4 +20,6 @@ public interface UnidadeSaudeService {
     boolean existe(int codigo);
 
     Object findById(long id);
+
+    Object findByBairro(String bairro);
 }

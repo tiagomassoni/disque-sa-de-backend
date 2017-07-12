@@ -123,4 +123,22 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
         }
         return null;
     }
+
+    @Override
+    public Object findByBairro(String bairro) {
+        for (Object esp: vetor) {
+            if (esp instanceof UnidadeSaude){;
+                UnidadeSaude u = (UnidadeSaude) esp;
+                if (u.getDescricao().equals(bairro)){
+                    return esp;
+                }
+            } else if (esp instanceof Hospital){
+                Hospital h = (Hospital) esp;
+                if (h.getDescricao().equals(bairro)){
+                    return esp;
+                }
+            }
+        }
+        return null;
+    }
 }
