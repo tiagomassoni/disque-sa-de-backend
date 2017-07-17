@@ -1,20 +1,19 @@
 package com.ufcg.si1.service;
 
-import com.ufcg.si1.model.UnidadeSaude;
 import exceptions.ObjetoInexistenteException;
 import exceptions.ObjetoJaExistenteException;
-import exceptions.RepositorioException;
+import exceptions.Rep;
 
 import java.util.List;
 
 
 public interface UnidadeSaudeService {
-    Object procura(int codigo) throws RepositorioException,
+    Object procura(int codigo) throws Rep,
             ObjetoInexistenteException;
 
     List<Object> getAll();
 
-    void insere(Object us)throws RepositorioException,
+    void insere(Object us)throws Rep,
             ObjetoJaExistenteException;
 
     boolean existe(int codigo);

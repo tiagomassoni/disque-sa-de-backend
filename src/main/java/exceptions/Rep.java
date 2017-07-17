@@ -1,8 +1,8 @@
 package exceptions;
 
-public class RepositorioException extends Exception {
+public class Rep extends Exception {
 
-	public RepositorioException(String erro) {
+	public Rep(String erro) {
 		super("ExcecaoDados: " + erro);
 	}
 }

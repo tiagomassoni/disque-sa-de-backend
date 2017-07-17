@@ -3,7 +3,7 @@ package com.ufcg.si1.service;
 import com.ufcg.si1.model.Especialidade;
 import exceptions.ObjetoInexistenteException;
 import exceptions.ObjetoJaExistenteException;
-import exceptions.RepositorioException;
+import exceptions.Rep;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -24,7 +24,7 @@ public class EspecialidadeServiceImpl implements EspecialidadeService {
     }
 
     @Override
-    public Especialidade procura(int codigo) throws RepositorioException,
+    public Especialidade procura(int codigo) throws Rep,
             ObjetoInexistenteException {
 
         int i = 0;
@@ -42,7 +42,7 @@ public class EspecialidadeServiceImpl implements EspecialidadeService {
 
     @Override
     public List getListaEspecialidade()
-            throws RepositorioException, ObjetoInexistenteException {
+            throws Rep, ObjetoInexistenteException {
         return Arrays.asList(vetor);
     }
 
@@ -60,13 +60,13 @@ public class EspecialidadeServiceImpl implements EspecialidadeService {
     }
 
     @Override
-    public void insere(Especialidade esp) throws RepositorioException,
+    public void insere(Especialidade esp) throws Rep,
             ObjetoJaExistenteException {
 
         esp.setCodigo(++geraCodigo);
 
         if (indice == this.vetor.length) {
-            throw new RepositorioException("Erro ao incluir no array");
+            throw new Rep("Erro ao incluir no array");
         }
 
         if (this.existe(esp.getCodigo())) {

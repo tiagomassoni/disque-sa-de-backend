@@ -2,8 +2,6 @@ package com.ufcg.si1.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import exceptions.ObjetoJaExistenteException;
-import exceptions.RepositorioException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +33,11 @@ public class UnidadeSaude {
         }
     }
 
-    public String getDescricao() {
+    public String pegaDescricao() {
         return this.descricao;
     }
 
-    public void setDescricao(String descricao) {
+    public void mudaDescricao(String descricao) {
         this.descricao = descricao;
     }
 
@@ -51,11 +49,11 @@ public class UnidadeSaude {
         this.especialidades.add(esp);
     }
 
-    public int getCodigo() {
+    public int pegaCodigo() {
         return this.codigo;
     }
 
-    public void setCodigo(int cod) {
+    public void mudaCodigo(int cod) {
         this.codigo = cod;
     }
 

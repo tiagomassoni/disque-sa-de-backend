@@ -77,16 +77,16 @@ public class SpringBootRestTestClient {
     }
 
     public static void main(String args[]){
-        /*listAllQueixas();
-        getQueixa();*/
+        listAllQueixas();
+        /*getQueixa();*/
         //createQueixa();
         //updateQueixa();
         //deleteUser();
         //listAllQueixas();
         //fecharQueixa(1);
-        insereUnidadesEsps();
+        //insereUnidadesEsps();
         //testeDeCalculo();
-        testeSituacao();
+        //testeSituacao();
     }
 
     private static void testeDeCalculo() {
@@ -109,7 +109,7 @@ public class SpringBootRestTestClient {
     }
 
 
-    private static void insereUnidadesEsps() {
+    /*private static void insereUnidadesEsps() {
         Especialidade cli = new Especialidade("Clinica Geral");
         Especialidade oft = new Especialidade("Oftalmologia");
         Especialidade cir = new Especialidade("Cirurgia");
@@ -148,7 +148,7 @@ public class SpringBootRestTestClient {
         System.out.println("Location : "+uri.toASCIIString());
 
     }
-
+*/
     private static void fecharQueixa(long i) {
         System.out.println("Testing fechar Queixa API----------");
         RestTemplate restTemplate = new RestTemplate();

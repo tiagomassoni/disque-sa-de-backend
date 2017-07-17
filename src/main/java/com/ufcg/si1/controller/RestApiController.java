@@ -8,7 +8,7 @@ import com.ufcg.si1.util.ObjWrapper;
 import exceptions.ObjetoInexistenteException;
 import exceptions.ObjetoInvalidoException;
 import exceptions.ObjetoJaExistenteException;
-import exceptions.RepositorioException;
+import exceptions.Rep;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +55,7 @@ public class RestApiController {
         //este codigo estava aqui, mas nao precisa mais
         /*if (queixaService.doesQueixaExist(queixa)) {
 			return new ResponseEntity(new CustomErrorType("Esta queixa já existe+
-					queixa.getDescricao()),HttpStatus.CONFLICT);
+					queixa.pegaDescricao()),HttpStatus.CONFLICT);
 		}*/
 
         try {
@@ -130,7 +130,7 @@ public class RestApiController {
         Object us = null;
         try {
             us = unidadeSaudeService.procura(codigoUnidadeSaude);
-        } catch (RepositorioException e) {
+        } catch (Rep e) {
             return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
         } catch (ObjetoInexistenteException e) {
             return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
@@ -162,7 +162,7 @@ public class RestApiController {
     public ResponseEntity<String> incluirEspecialidade(@RequestBody Especialidade esp, UriComponentsBuilder ucBuilder) {
         try {
             especialidadeService.insere(esp);
-        } catch (RepositorioException e) {
+        } catch (Rep e) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         } catch (ObjetoJaExistenteException e) {
             return new ResponseEntity<String>(HttpStatus.CONFLICT);
@@ -180,14 +180,14 @@ public class RestApiController {
 
         try {
             unidadeSaudeService.insere(us);
-        } catch (RepositorioException e) {
+        } catch (Rep e) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         } catch (ObjetoJaExistenteException e) {
             return new ResponseEntity<String>(HttpStatus.CONFLICT);
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/api/unidade/{id}").buildAndExpand(us.getCodigo()).toUri());
+        headers.setLocation(ucBuilder.path("/api/unidade/{id}").buildAndExpand(us.pegaCodigo()).toUri());
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
     }
 

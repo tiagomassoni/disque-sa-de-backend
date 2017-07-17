@@ -4,7 +4,7 @@ import br.edu.ufcg.Hospital;
 import com.ufcg.si1.model.UnidadeSaude;
 import exceptions.ObjetoInexistenteException;
 import exceptions.ObjetoJaExistenteException;
-import exceptions.RepositorioException;
+import exceptions.Rep;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -25,13 +25,13 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
 
 
     @Override
-    public Object procura(int codigo) throws RepositorioException,
+    public Object procura(int codigo) throws Rep,
             ObjetoInexistenteException {
         int i = 0;
         while (i < indice) {
             if (vetor[i] instanceof UnidadeSaude){
                 UnidadeSaude unidadeSaude = (UnidadeSaude) vetor[i];
-                if(unidadeSaude.getCodigo() == codigo){
+                if(unidadeSaude.pegaCodigo() == codigo){
                     return vetor[i];
                 }
             }else if(vetor[i] instanceof Hospital){
@@ -51,29 +51,31 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
     }
 
     @Override
-    public void insere(Object us) throws RepositorioException,
+    public void insere(Object us) throws Rep,
             ObjetoJaExistenteException {
 
+        if (us == null) {throw new Rep("Erro!");
+        } else{
         if (us instanceof UnidadeSaude){
-            ((UnidadeSaude) us).setCodigo(++geraCodigo);
+        ((UnidadeSaude) us).mudaCodigo(++geraCodigo);
         }else {
-            ((Hospital) us).setCodigo(++geraCodigo);
-        }
+        ((Hospital) us).setCodigo(++geraCodigo);
+        }}
 
         if (indice == this.vetor.length) {
-            throw new RepositorioException("Erro ao incluir no array");
+        throw new Rep("Erro ao incluir no array");
         }
 
-        if (us instanceof UnidadeSaude) {
-            UnidadeSaude unidadeSaude = (UnidadeSaude) us;
-            if (this.existe(unidadeSaude.getCodigo())){
-                throw new ObjetoJaExistenteException("Objeto jah existe no array");
-            }
+        if (us instanceof UnidadeSaude){
+        UnidadeSaude unidadeSaude = (UnidadeSaude) us;
+        if (this.existe(unidadeSaude.pegaCodigo())){
+        throw new ObjetoJaExistenteException("Objeto jah existe no array");
+        }
         } else if (us instanceof Hospital){
-            Hospital hospital = (Hospital) us;
-            if (this.existe(hospital.getCodigo())){
-                throw new ObjetoJaExistenteException("Objeto jah existe no array");
-            }
+        Hospital hospital = (Hospital) us;
+        if (this.existe(hospital.getCodigo())){
+        throw new ObjetoJaExistenteException("Objeto jah existe no array");
+        }
         }
 
 
@@ -89,7 +91,7 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
         for (int i = 0; i < indice; i++) {
             if (this.vetor[i] instanceof UnidadeSaude){
                 UnidadeSaude unidadeSaude = (UnidadeSaude) vetor[i];
-                if (unidadeSaude.getCodigo() == codigo){
+                if (unidadeSaude.pegaCodigo() == codigo){
                     indiceAux = i;
                     existe = true;
                     break;
@@ -111,7 +113,7 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
         for (Object esp: vetor) {
             if (esp instanceof UnidadeSaude){
                 UnidadeSaude unidadeSaude = (UnidadeSaude) esp;
-                if (unidadeSaude != null && unidadeSaude.getCodigo() == id){
+                if (unidadeSaude != null && unidadeSaude.pegaCodigo() == id){
                     return unidadeSaude;
                 }
             }else if (esp instanceof Hospital){
@@ -129,7 +131,7 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
         for (Object esp: vetor) {
             if (esp instanceof UnidadeSaude){;
                 UnidadeSaude u = (UnidadeSaude) esp;
-                if (u.getDescricao().equals(bairro)){
+                if (u.pegaDescricao().equals(bairro)){
                     return esp;
                 }
             } else if (esp instanceof Hospital){
