@@ -25,7 +25,17 @@ public interface QueixaService {
 
 	Iterator<Queixa> getIterator();
 
+	void abrirQueixa(Queixa queixa);
 
-//	boolean isUserExist(Queixa user);
+	/**
+	 * Método que calcula a porcentagem a eficiência das queixas;
+     *      - Calcula-se a porção de queixas abertas em relação ao total;
+	 * @return um double representado a proporção entre queixas abertas e fechadas
+	 */
+    Double getQueixaEficiencia();
+
+
+//	boolean isUserExi
+// st(Queixa user);
 	
 }
