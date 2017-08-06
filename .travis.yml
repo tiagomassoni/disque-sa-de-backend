@@ -1,11 +1,10 @@
 language: java
+jdk: oraclejdk8
 
-jdk:
-  - oraclejdk7
+install: true
+script: ./mvnw clean install
 
-script:
-  - mvn test -B
-
-before_script:
-  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+cache:
+  directories:
+  - $HOME/.m2
 
