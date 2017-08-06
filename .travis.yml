@@ -1,10 +1,8 @@
 language: java
 jdk: oraclejdk8
-
-install: true
-script: ./mvnw clean install
-
+install: true # skipping default install step
 cache:
   directories:
-  - $HOME/.m2
-
+    - $HOME/.m2 # caching maven dependencies to speed up the build
+script: 
+  - mvn test
