@@ -3,6 +3,8 @@ package com.ufcg.si1.service;
 import com.ufcg.si1.model.Queixa;
 import org.junit.*;
 
+import static junit.framework.TestCase.fail;
+
 /**
  * Testes para os services do sistema disque-saúde.
  *
@@ -14,7 +16,9 @@ import org.junit.*;
  */
 public class TestServices {
 
+
     private QueixaService queixaService;
+    private static final String QUEIXA_ENCERRADA_EXCEPTION = "Queixa já foi fechada. Não pode ser reaberta";
 
     @Before
     public void setup() {
@@ -46,8 +50,45 @@ public class TestServices {
     }
 
     @Test
-    public void test2() throws Exception {
-        // Test something else.
+    public void modificaEFechaQueixas() throws Exception {
+        //US4: das que precisam ser adicionadas
+
+
+        queixaService.abrirQueixa(new Queixa(4, "comi uma lomba e to me cagando todin",
+                Queixa.ABERTA, "", "Jose Silva",
+                "jose@gmail.com", "rua dos loco", "PE", "Pedregal"));
+
+        Assert.assertEquals(4, queixaService.size());
+
+        queixaService.abrirQueixa(new Queixa(5, "que?",
+                Queixa.ABERTA, "", "Jose",
+                "jose@gmail.com", "rua dos loco", "PE", "Belavista"));
+
+        Assert.assertEquals(5, queixaService.size());
+
+        Assert.assertEquals(true, queixaService.isAberta(new Long(4)));
+
+        //Esse número mágico Queixa.FECHADA precisa ser trocado por um enum.
+        queixaService.modificaStatusDaQueixa(new Long(4), Queixa.FECHADA);
+        Assert.assertEquals(false, queixaService.isAberta(new Long(4)));
+
+        try{
+            queixaService.modificaStatusDaQueixa(new Long(4), Queixa.ABERTA);
+        } catch (Exception e){
+            Assert.assertEquals(QUEIXA_ENCERRADA_EXCEPTION, e.getMessage());
+            //esta linha precisa ser executada
+            fail();
+
+        }
+
+        queixaService.fecharQueixa(new Long(5), "A unidade já foi contactada e as medidas cabíveis já estão sendo tomadas");
+
+        Assert.assertEquals(false, queixaService.isAberta(new Long(5)));
+
+        Assert.assertEquals(0, queixaService.getQueixaEficiencia(), 0.005);
+
+
+
     }
 
 
