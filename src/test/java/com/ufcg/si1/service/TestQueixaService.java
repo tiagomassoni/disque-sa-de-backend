@@ -6,19 +6,18 @@ import org.junit.*;
 import static junit.framework.TestCase.fail;
 
 /**
- * Testes para os services do sistema disque-saúde.
- *
- * Services cobertos por estas suítes:
- *
- *      - QueixaService
- *
+ * Testes para os os comportamento de QueixaService.
+ * Estas suites foram feitas utilizando a abordagem de testes caixa-preta.
+ *  *
  * Created by sampaio on 03/08/17.
  */
-public class TestServices {
+public class TestQueixaService {
 
 
     private QueixaService queixaService;
     private static final String QUEIXA_ENCERRADA_EXCEPTION = "Queixa já foi fechada. Não pode ser reaberta";
+    private static final String QUEIXA_INEXISTENTE = "Queixa inexistente";
+
 
     @Before
     public void setup() {
@@ -30,7 +29,7 @@ public class TestServices {
     @Test
     public void testaEficienciaDoAtendimento() throws Exception {
 
-        Assert.assertEquals(0, queixaService.getQueixaEficiencia(), 0.005);
+        Assert.assertEquals(0, queixaService.getQueixaAbertaPorcentagem(), 0.005);
 
         queixaService.abrirQueixa(new Queixa(4, "comi uma lomba e to me cagando todin",
                 Queixa.ABERTA, "", "Jose Silva",
@@ -40,13 +39,13 @@ public class TestServices {
                 Queixa.ABERTA, "", "Jose",
                 "jose@gmail.com", "rua dos loco", "PE", "Belavista"));
 
-        Assert.assertEquals(0.4, queixaService.getQueixaEficiencia(), 0.005);
+        Assert.assertEquals(0.4, queixaService.getQueixaAbertaPorcentagem(), 0.005);
 
         queixaService.deleteQueixaById(1);
         queixaService.deleteQueixaById(2);
         queixaService.deleteQueixaById(3);
 
-        Assert.assertEquals(1.0, queixaService.getQueixaEficiencia(), 0.005);
+        Assert.assertEquals(1.0, queixaService.getQueixaAbertaPorcentagem(), 0.005);
     }
 
     @Test
@@ -85,9 +84,7 @@ public class TestServices {
 
         Assert.assertEquals(false, queixaService.isAberta(new Long(5)));
 
-        Assert.assertEquals(0, queixaService.getQueixaEficiencia(), 0.005);
-
-
+        Assert.assertEquals(0, queixaService.getQueixaAbertaPorcentagem(), 0.005);
 
     }
 
@@ -100,11 +97,59 @@ public class TestServices {
                 "jose@gmail.com", "rua dos catiorros", "PB", "Olivedos"));
 
         Assert.assertEquals(4, queixaService.size());
-        Assert.assertEquals(0.25, queixaService.getQueixaEficiencia(), 0.005);
+        Assert.assertEquals(0.25, queixaService.getQueixaAbertaPorcentagem(), 0.005);
 
         queixaService.fecharQueixa(new Long(97), "Os cachorros já forem recolhidos e se encontram no abrigo de animais");
 
-        Assert.assertEquals(0.0, queixaService.getQueixaEficiencia(), 0.005);
+        Assert.assertEquals(0.0, queixaService.getQueixaAbertaPorcentagem(), 0.005);
+
+        Assert.assertEquals(false, queixaService.isAberta(new Long(97)));
+
+    }
+
+    @Test
+    public void testeDeletaQueixas() throws Exception {
+
+        Assert.assertEquals(3, queixaService.size());
+
+        queixaService.deleteQueixaById(1);
+        Assert.assertEquals(2, queixaService.size());
+
+        queixaService.deleteQueixaById(2);
+        Assert.assertEquals(1, queixaService.size());
+
+        queixaService.deleteQueixaById(3);
+        Assert.assertEquals(0, queixaService.size());
+
+        try{
+            queixaService.deleteQueixaById(1);
+        } catch (Exception e){
+
+            Assert.assertEquals(QUEIXA_INEXISTENTE, e.getMessage());
+            //tem que executar estas linhas
+            fail();
+
+        }
+
+    }
+
+    @Test
+    public void testeFindByIdAndEquals() throws Exception {
+
+        Queixa q1 = new Queixa(1, "Passei mal com uma coxinha",
+                Queixa.FECHADA, "", "Jose Silva",
+                "jose@gmail.com", "rua dos tolos", "PE", "Recife");
+
+        Assert.assertEquals(q1, queixaService.findById(1));
+
+        Assert.assertNotEquals(q1, queixaService.findById(2));
+
+        try{
+            Queixa q = queixaService.findById(99);
+        } catch (Exception e){
+            Assert.assertEquals(QUEIXA_INEXISTENTE, e.getMessage());
+            fail();
+        }
 
 
     }
@@ -124,7 +169,7 @@ public class TestServices {
 
         queixaService.abrirQueixa(new Queixa(3, "comprei uma parada estragada",
                 Queixa.FECHADA, "se fodeu", "zezin",
-                "jose@gmail.com", "rua dos tolos", "DF", "PRAIBA"));
+                "jose@gmail.com", "rua dos tolos", "DF", "PARAIBA"));
     }
 
 }

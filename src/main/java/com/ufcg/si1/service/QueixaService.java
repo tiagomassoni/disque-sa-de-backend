@@ -21,6 +21,10 @@ public interface QueixaService {
 
 	void deleteQueixaById(long id);
 
+    /**
+     * Verifica a quantidade de queixas no sistema
+     * @return - quantidade de queixas
+     */
     int size();
 
 	Iterator<Queixa> getIterator();
@@ -32,7 +36,7 @@ public interface QueixaService {
      *      - Calcula-se a porção de queixas abertas em relação ao total;
 	 * @return um double representado a proporção entre queixas abertas e fechadas
 	 */
-    Double getQueixaEficiencia();
+    Double getQueixaAbertaPorcentagem();
 
     /**
      * Verifica se uma determinada queixa possui status aberto ou fechado
