@@ -91,6 +91,24 @@ public class TestServices {
 
     }
 
+    @Test
+    public void testeQueixaSobreAnimais() throws Exception {
+
+        queixaService.abrirQueixa(new Queixa(97, TIPO_QUEIXA.ANIMAL,"Cachorros",
+                "Tem uns dog aqui na rua embassando?",
+                Queixa.ABERTA, "", "Jose",
+                "jose@gmail.com", "rua dos catiorros", "PB", "Olivedos"));
+
+        Assert.assertEquals(4, queixaService.size());
+        Assert.assertEquals(0.25, queixaService.getQueixaEficiencia(), 0.005);
+
+        queixaService.fecharQueixa(new Long(97), "Os cachorros já forem recolhidos e se encontram no abrigo de animais");
+
+        Assert.assertEquals(0.0, queixaService.getQueixaEficiencia(), 0.005);
+
+
+    }
+
 
 
 
