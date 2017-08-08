@@ -1,6 +1,6 @@
 package com.ufcg.si1.model;
 
-import com.ufcg.si1.model.Queixa;
+import com.ufcg.si1.model.queixa.Queixa;
 
 import exceptions.ObjetoInvalidoException;
 
