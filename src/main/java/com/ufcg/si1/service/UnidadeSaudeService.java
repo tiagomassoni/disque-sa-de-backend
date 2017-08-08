@@ -21,4 +21,6 @@ public interface UnidadeSaudeService {
     Object findById(long id);
 
     Object findByBairro(String bairro);
+    
+    Double mediaMedica(Object unidade);
 }

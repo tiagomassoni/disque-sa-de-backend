@@ -143,15 +143,6 @@ public class UnidadeRest {
         if(unidade == null){
             return new ResponseEntity<ObjWrapper<Double>>(HttpStatus.NOT_FOUND);
         }
-
-        double c = 0.0;
-        if (unidade instanceof PostoSaude)
-            c = ((PostoSaude) unidade).getAtendentes()
-                    / ((PostoSaude) unidade).taxaDiaria();
-        else if (unidade instanceof Hospital){
-            c = ((Hospital) unidade).getNumeroMedicos()
-                    / ((Hospital) unidade).getNumeroPacientesDia();
-        }
-        return new ResponseEntity<ObjWrapper<Double>>(new ObjWrapper<Double>(new Double(c)), HttpStatus.OK);
+        return new ResponseEntity<ObjWrapper<Double>>(new ObjWrapper<Double>(unidadeSaudeService.mediaMedica(unidade)), HttpStatus.OK);
     }
 }

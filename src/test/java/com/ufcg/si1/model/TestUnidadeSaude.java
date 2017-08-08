@@ -5,6 +5,7 @@ import com.ufcg.si1.model.UnidadeSaude;
 import com.ufcg.si1.service.UnidadeSaudeService;
 import com.ufcg.si1.service.UnidadeSaudeServiceImpl;
 
+import br.edu.ufcg.Hospital;
 import exceptions.ObjetoInexistenteException;
 import exceptions.ObjetoJaExistenteException;
 import exceptions.Rep;
@@ -91,6 +92,17 @@ public class TestUnidadeSaude {
 		listaUnidades[1] = unidadeCatole;
 		listaUnidades[0] = unidadeTambor;
 		Assert.assertEquals(Arrays.asList(listaUnidades), service.getAll());
+	}
+	
+	@Test
+	public void mediaMedicoPorPacientePostoDeSaude() {
+		Assert.assertEquals(service.mediaMedica((Object) unidadeCatole), 1.33333333, 0.01);
+		Assert.assertEquals(service.mediaMedica((Object) unidadeTambor), 2.66666666, 0.01);
+	}
+	
+	@Test
+	public void mediaMedicoPorPacienteUnidadeSaude() {
+		//TODO: Nao consegui testar, a classe Hospital so esta disponivel como .jar	
 	}
 
 }

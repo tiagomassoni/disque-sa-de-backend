@@ -1,10 +1,13 @@
 package com.ufcg.si1.service;
 
 import br.edu.ufcg.Hospital;
+
+import com.ufcg.si1.model.PostoSaude;
 import com.ufcg.si1.model.UnidadeSaude;
 import exceptions.ObjetoInexistenteException;
 import exceptions.ObjetoJaExistenteException;
 import exceptions.Rep;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -142,5 +145,17 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
             }
         }
         return null;
+    }
+    
+    public Double mediaMedica(Object unidade) {
+        double c = 0.0;
+        if (unidade instanceof PostoSaude)
+            c = ((PostoSaude) unidade).getAtendentes()
+                    / ((PostoSaude) unidade).taxaDiaria();
+        else if (unidade instanceof Hospital){
+            c = ((Hospital) unidade).getNumeroMedicos()
+                    / ((Hospital) unidade).getNumeroPacientesDia();
+        }
+        return c;
     }
 }
