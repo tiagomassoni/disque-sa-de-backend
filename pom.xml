@@ -29,6 +29,11 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
+  			<groupId>junit</groupId>
+  			<artifactId>junit</artifactId>
+  			<version>4.12</version>
+		</dependency>
+		<dependency>
 			<groupId>br.edu.ufcg</groupId>
 			<artifactId>hospital</artifactId>
 			<version>0.0</version>
