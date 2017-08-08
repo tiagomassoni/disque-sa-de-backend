@@ -1,23 +1,22 @@
 package com.ufcg.si1.model;
 
 import exceptions.ObjetoInvalidoException;
-import org.springframework.http.ResponseEntity;
 
 public class Queixa {
 
+	public static final int ABERTA = 1;
+	public static final int EM_ANDAMENTO = 2;
+	public static final int FECHADA = 3;
+	
 	private long id;
 
 	private String descricao;
 
 	private Pessoa solicitante;
 
-	public int situacao; // usa variaveis estaticas abaixo
-	/* situacoes da queixa */
-	public static final int ABERTA = 1;
-	public static final int EM_ANDAMENTO = 2;
-	public static final int FECHADA = 3;
+	public int situacao; 
 
-	private String comentario = ""; // usado na atualizacao da queixa
+	private String comentario;
 
 	public Queixa(){
 		id=0;
@@ -31,6 +30,22 @@ public class Queixa {
 		this.situacao = situacao;
 		this.comentario = comentario;
 		this.solicitante = new Pessoa(nome, email, rua, uf, cidade);
+	}
+	
+	public void abrir() throws ObjetoInvalidoException {
+		if (this.situacao != EM_ANDAMENTO)
+			this.situacao = ABERTA;
+		else
+			throw new ObjetoInvalidoException("Status inválido");
+	}
+
+	public void fechar(String coment) throws ObjetoInvalidoException {
+		if (this.situacao == EM_ANDAMENTO
+				|| this.situacao == ABERTA) {
+			this.situacao = FECHADA;
+			this.comentario = coment;
+		} else
+			throw new ObjetoInvalidoException("Status inválido");
 	}
 
 	public long getId() {
@@ -51,22 +66,6 @@ public class Queixa {
 
 	public int getSituacao() {
 		return situacao;
-	}
-
-	public void abrir() throws ObjetoInvalidoException {
-		if (this.situacao != Queixa.EM_ANDAMENTO)
-			this.situacao = Queixa.ABERTA;
-		else
-			throw new ObjetoInvalidoException("Status inválido");
-	}
-
-	public void fechar(String coment) throws ObjetoInvalidoException {
-		if (this.situacao == Queixa.EM_ANDAMENTO
-				|| this.situacao == Queixa.ABERTA) {
-			this.situacao = Queixa.FECHADA;
-			this.comentario = coment;
-		} else
-			throw new ObjetoInvalidoException("Status Inválido");
 	}
 
 	public String getComentario() {
@@ -106,5 +105,4 @@ public class Queixa {
 			return false;
 		return true;
 	}
-
 }
