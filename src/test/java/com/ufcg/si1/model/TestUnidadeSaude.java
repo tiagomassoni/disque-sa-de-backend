@@ -1,4 +1,4 @@
-package model;
+package com.ufcg.si1.model;
 
 import com.ufcg.si1.model.PostoSaude;
 import com.ufcg.si1.model.UnidadeSaude;
@@ -9,11 +9,13 @@ import exceptions.ObjetoInexistenteException;
 import exceptions.ObjetoJaExistenteException;
 import exceptions.Rep;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
+
 
 public class TestUnidadeSaude {
 
