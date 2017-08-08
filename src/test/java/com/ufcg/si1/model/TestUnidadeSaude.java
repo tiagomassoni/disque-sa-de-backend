@@ -9,10 +9,10 @@ import exceptions.ObjetoInexistenteException;
 import exceptions.ObjetoJaExistenteException;
 import exceptions.Rep;
 
-import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,13 +48,13 @@ public class TestUnidadeSaude {
 
 	@Test
 	public void insereUnidade() {
-		assertEquals(service.existe(2), true);
-		assertEquals(service.existe(1), true);
+		Assert.assertEquals(service.existe(2), true);
+		Assert.assertEquals(service.existe(1), true);
 
 		try {
 			service.insere(unidadeTambor);
 		} catch (Rep | ObjetoJaExistenteException e) {
-			assertEquals(e.getMessage(), "ExcecaoDados: Objeto jah existe no array");
+			Assert.assertEquals(e.getMessage(), "ExcecaoDados: Objeto jah existe no array");
 		}
 
 	}
@@ -62,8 +62,8 @@ public class TestUnidadeSaude {
 	@Test
 	public void procuraUnidadeCodigo() {
 		try {
-			assertEquals(service.procura(1), unidadeTambor);
-			assertEquals(service.procura(2), unidadeCatole);
+			Assert.assertEquals(service.procura(1), unidadeTambor);
+			Assert.assertEquals(service.procura(2), unidadeCatole);
 		} catch (Rep | ObjetoInexistenteException e) {
 			e.printStackTrace();
 		}
@@ -71,7 +71,7 @@ public class TestUnidadeSaude {
 		try {
 			service.procura(3);
 		} catch (Rep | ObjetoInexistenteException e) {
-			assertEquals(e.getMessage(), "ExcecaoDados: Não achou unidade");
+			Assert.assertEquals(e.getMessage(), "ExcecaoDados: Não achou unidade");
 
 		}
 
@@ -79,9 +79,9 @@ public class TestUnidadeSaude {
 
 	@Test
 	public void procuraPorBairro() {
-		assertEquals(service.findByBairro(EnderecoCatole), unidadeCatole);
-		assertEquals(service.findByBairro(EnderecoTambor), unidadeTambor);
-		assertEquals(service.findByBairro(EnderecoInvalido), null);
+		Assert.assertEquals(service.findByBairro(EnderecoCatole), unidadeCatole);
+		Assert.assertEquals(service.findByBairro(EnderecoTambor), unidadeTambor);
+		Assert.assertEquals(service.findByBairro(EnderecoInvalido), null);
 	}
 	
 	
@@ -90,7 +90,7 @@ public class TestUnidadeSaude {
 		listaUnidades = new Object[100];
 		listaUnidades[1] = unidadeCatole;
 		listaUnidades[0] = unidadeTambor;
-		assertEquals(Arrays.asList(listaUnidades), service.getAll());
+		Assert.assertEquals(Arrays.asList(listaUnidades), service.getAll());
 	}
 
 }
