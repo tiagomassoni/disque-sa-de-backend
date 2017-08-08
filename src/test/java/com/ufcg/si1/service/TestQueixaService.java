@@ -139,7 +139,6 @@ public class TestQueixaService {
 
 
 
-
     private void dummyQueixas(){
 
         queixaService.abrirQueixa(new Queixa(1, "Passei mal com uma coxinha",

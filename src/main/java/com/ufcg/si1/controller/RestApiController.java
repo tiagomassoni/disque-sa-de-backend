@@ -2,6 +2,7 @@ package com.ufcg.si1.controller;
 
 import br.edu.ufcg.Hospital;
 import com.ufcg.si1.model.*;
+import com.ufcg.si1.model.queixa.Queixa;
 import com.ufcg.si1.service.*;
 import com.ufcg.si1.util.CustomErrorType;
 import com.ufcg.si1.util.ObjWrapper;

@@ -1,99 +1,132 @@
 package com.ufcg.si1.service;
 
-import com.ufcg.si1.model.Queixa;
+import com.ufcg.si1.model.queixa.Queixa;
+import com.ufcg.si1.model.queixa.STATUS_QUEIXA;
+import exceptions.ObjetoInvalidoException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 
 @Service("queixaService")
 public class QueixaServiceImpl implements QueixaService {
-	
-	private static final int QUEIXA_FECHADA = 3;
-	
+
+
     private static final AtomicLong counter = new AtomicLong();
 
-    private static List<Queixa> queixas;
-
-    static {
-        queixas = populateDummyQueixas();
-    }
-
-    private static List<Queixa> populateDummyQueixas() {
-        List<Queixa> queixas = new ArrayList<Queixa>();
-
-        queixas.add(new Queixa(counter.incrementAndGet(), "Passei mal com uma coxinha",
-                QUEIXA_FECHADA, "", "Jose Silva",
-                "jose@gmail.com", "rua dos tolos", "PE", "Recife"));
+    private static Map<Long, Queixa> queixas = new HashMap<>();
 
 
-        queixas.add(new Queixa(counter.incrementAndGet(),
-                "Bacalhau estragado, passamos mal!", QUEIXA_FECHADA, "",
-                "Ailton Sousa", "ailton@gmail.com", "rua dos bobos", "PB",
-                "Joao Pessoa"));
-
-        queixas.add(new Queixa(counter.incrementAndGet(), "Nossa rua estah muito suja", QUEIXA_FECHADA, "",
-                "Jose Silva", "jose@gmail.com", "rua dos tolos", "PE", "Recife"));
-
-
-        queixas.add(new Queixa(counter.incrementAndGet(), "iluminacao horrivel, muitos assaltos", QUEIXA_FECHADA, "",
-                "Ailton Sousa", "ailton@gmail.com", "rua dos bobos", "PB",
-                "Joao Pessoa"));
-
-        return queixas;
-    }
-
-    public List<Queixa> findAllQueixas() {
-        return queixas;
-    }
-
-    public void saveQueixa(Queixa queixa) {
-        queixa.setId(counter.incrementAndGet());
-        queixas.add(queixa);
-    }
-
-    public void updateQueixa(Queixa queixa) {
-        int index = queixas.indexOf(queixa);
-        queixas.set(index, queixa);
-    }
-
-    public void deleteQueixaById(long id) {
-
-        for (Iterator<Queixa> iterator = queixas.iterator(); iterator.hasNext(); ) {
-            Queixa q = iterator.next();
-            if (q.getId() == id) {
-                iterator.remove();
-            }
-        }
+    @Override
+    public Collection<Queixa> findAllQueixas() {
+        return this.queixas.values();
     }
 
     @Override
-    //este metodo nunca eh chamado, mas se precisar estah aqui
-    public int size() {
-        return queixas.size();
-    }
-
-    @Override
-    public Iterator<Queixa> getIterator() {
-        return queixas.iterator();
-    }
-
-    public void deleteAllUsers() {
-        queixas.clear();
-    }
-
     public Queixa findById(long id) {
-        for (Queixa queixa : queixas) {
-            if (queixa.getId() == id) {
-                return queixa;
-            }
-        }
-        return null;
+        return this.queixas.get(id);
+        //FIXME: resolver essa exception
+
     }
 
+    @Override
+    public void updateQueixa(Queixa queixa) {
+        saveQueixaExistente(queixa);
+
+    }
+
+    @Override
+    public void saveQueixa(Queixa queixa) {
+        //recendo uma queixa direto da rest
+        queixa.setId(counter.incrementAndGet());
+        this.queixas.put(queixa.getId(), queixa);
+
+    }
+
+    @Override
+    public void deleteQueixaById(long id) {
+        this.queixas.remove(id);
+    }
+
+    @Override
+    public int size() {
+        return this.queixas.size();
+    }
+
+
+    @Override
+    public void abrirQueixa(Queixa queixa) {
+        queixa.setId(counter.incrementAndGet());
+        this.queixas.put(queixa.getId(), queixa);
+    }
+
+    @Override
+    public Double getQueixaAbertaPorcentagem() {
+
+        int count = 0;
+        for(Long currentId : this.queixas.keySet()){
+
+            Queixa currentQueixa = this.queixas.get(currentId);
+            if(currentQueixa.getSituacao() == STATUS_QUEIXA.ABERTA)
+                count++;
+
+        }
+        double result = count/size();
+        return new Double(result);
+    }
+
+    @Override
+    public boolean isAberta(Long id) {
+        Queixa currentQueixa = this.queixas.get(id);
+        return (currentQueixa.getSituacao() == STATUS_QUEIXA.ABERTA);
+    }
+
+    @Override
+    public void modificaStatusDaQueixa(Long id, int situacao) {
+
+        Queixa currentQueixa = this.queixas.get(id);
+        if(currentQueixa != null){
+            currentQueixa.setSituacao(verificaQueixa(situacao));
+            saveQueixaExistente(currentQueixa);
+        }
+
+    }
+
+
+
+    @Override
+    public void fecharQueixa(Long id, String comentario) throws ObjetoInvalidoException {
+
+        Queixa currentQueixa = this.queixas.get(id);
+        currentQueixa.fechar(comentario);
+        saveQueixaExistente(currentQueixa);
+
+    }
+
+    private void saveQueixaExistente(Queixa queixa){
+        this.queixas.put(queixa.getId(), queixa);
+    }
+
+    /**
+     * Retorna o status (enum) de uma queixa dado um codigo
+     * @param situacao - codigo da situacao
+     * @return - enum que representa a situação
+     *
+     */
+    private STATUS_QUEIXA verificaQueixa(int situacao){
+
+        STATUS_QUEIXA status;
+        if(situacao == 1){
+            status = STATUS_QUEIXA.ABERTA;
+        }else if(situacao == 2){
+            status = STATUS_QUEIXA.EM_ANDAMENTO;
+        }else{
+            status = STATUS_QUEIXA.FECHADA;
+        }
+        return status;
+
+    }
 
 
 }
