@@ -71,7 +71,7 @@ public class TestQueixa {
 		try {
 			queixa3.fechar("Foi sem querer");
 		} catch (ObjetoInvalidoException e) {
-			Assert.assertEquals("ExcecaoDados: Statusinválido", e.getMessage());
+			Assert.assertEquals("ExcecaoDados: Status inválido", e.getMessage());
 		}
 	}
 }
