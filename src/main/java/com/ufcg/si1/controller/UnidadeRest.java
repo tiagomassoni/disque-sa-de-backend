@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.model.PostoSaude;
 import com.ufcg.si1.model.UnidadeSaude;
 import com.ufcg.si1.service.UnidadeSaudeService;
@@ -46,21 +47,14 @@ public class UnidadeRest {
 	 * 		   enviado.
 	 */
 	@RequestMapping(value = "/especialidade", method = RequestMethod.GET)
-    public ResponseEntity<?> consultaEspecialidadeporUnidadeSaude(@RequestBody int codigoUnidadeSaude) {
+    public ResponseEntity<?> consultaEspecialidadeporUnidadeSaude(@RequestBody Long codigoUnidadeSaude) {
+		
+		List<Especialidade> especialidades = unidadeSaudeService.especialidadesPorUnidade(codigoUnidadeSaude);
 
-        Object us = null;
-        try {
-            us = unidadeSaudeService.procura(codigoUnidadeSaude);
-        } catch (Rep e) {
-            return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
-        } catch (ObjetoInexistenteException e) {
-            return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
-        }
-        if (us instanceof UnidadeSaude){
-            UnidadeSaude us1 = (UnidadeSaude) us;
-            return new ResponseEntity<>(us1.getEspecialidades(), HttpStatus.OK);
-        }
-
+		if (!especialidades.isEmpty()) {
+            return new ResponseEntity<>(especialidades, HttpStatus.OK);
+		}
+		
         return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
     }
     
@@ -75,17 +69,14 @@ public class UnidadeRest {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<?> getAllUnidades() {
-        List<Object> unidades = unidadeSaudeService.getAll();
-        if (unidades.isEmpty()) return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
-        else{
-            List<UnidadeSaude> unidadeSaudes = new ArrayList<>();
-            for (Object  saude: unidades) {
-                if(saude instanceof UnidadeSaude){
-                    unidadeSaudes.add((UnidadeSaude) saude);
-                }
-            }
-            return new ResponseEntity<>(unidadeSaudes, HttpStatus.OK);
-        }
+		
+		
+		List<UnidadeSaude> todasUnidades = unidadeSaudeService.getAll();
+		
+		if (!todasUnidades.isEmpty()) {
+            return new ResponseEntity<>(todasUnidades, HttpStatus.OK);
+		} 
+		return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
     }
 	
 	/**
@@ -109,40 +100,72 @@ public class UnidadeRest {
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/api/unidade/{id}").buildAndExpand(us.pegaCodigo()).toUri());
+        headers.setLocation(ucBuilder.path("/api/unidade/{id}").buildAndExpand(us.getId()).toUri());
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
     }
 	
+	/**
+	 * URI do recurso: /{id}
+	 * 
+	 * Método de acesso GET para retornar unidade pelo codigo de identificação
+	 * 
+	 * @return Response com o sucesso ou não da requisição. Para o 
+	 * 		   caso de sucesso, o recurso requisitado também será
+	 * 		   enviado.
+	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> consultarUnidadeSaude(@PathVariable("id") long id) {
 
-        Object us = unidadeSaudeService.findById(id);
+		UnidadeSaude us = unidadeSaudeService.findById(id);
         if (us == null) {
-            return new ResponseEntity(new CustomErrorType("Unidade with id " + id
+            return new ResponseEntity<>(new CustomErrorType("Unidade with id " + id
                     + " not found"), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(us, HttpStatus.OK);
     }
 	
+	
+	/**
+	 * URI do recurso: /busca
+	 * 
+	 * Método de acesso GET para listar unidades de um determinado bairro.
+	 * 
+	 * @return Response com o sucesso ou não da requisição. Para o 
+	 * 		   caso de sucesso, o recurso requisitado também será
+	 * 		   enviado.
+	 */
 	@RequestMapping(value="/busca", method= RequestMethod.GET)
     public ResponseEntity<?> consultarUnidadeSaudePorBairro(@RequestParam(value = "bairro", required = true) String bairro){
-        Object us = unidadeSaudeService.findByBairro(bairro);
-        if (us == null && !(us instanceof UnidadeSaude)) {
-            return new ResponseEntity(new CustomErrorType("Unidade with bairro " + bairro
-                    + " not found"), HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<UnidadeSaude>((UnidadeSaude) us, HttpStatus.OK);
+        
+		List<UnidadeSaude> unidadesDoBairro = unidadeSaudeService.findByBairro(bairro);
+		if (!unidadesDoBairro.isEmpty()) {
+	        return new ResponseEntity<List>(unidadesDoBairro, HttpStatus.OK);
+		}
+		return new ResponseEntity(new CustomErrorType("Unidade with bairro " + bairro
+                + " not found"), HttpStatus.NOT_FOUND);
     }
 	
+	
+	
+	/**
+	 * URI do recurso: /medicos/{id}
+	 * 
+	 * Método de acesso GET que retorna a eficiencia de uma Unidade de Saude.
+	 * 
+	 * @return Response com o sucesso ou não da requisição. Para o 
+	 * 		   caso de sucesso, o recurso requisitado também será
+	 * 		   enviado.
+	 */
 	@RequestMapping(value = "/medicos/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> calcularMediaMedicoPacienteDia(@PathVariable("id") long id) {
+		
+		UnidadeSaude us = unidadeSaudeService.findById(id);
+		
+		if (us != null) {
+	        return new ResponseEntity<ObjWrapper<Double>>(new ObjWrapper<Double>(unidadeSaudeService.mediaMedica(us)), HttpStatus.OK);
 
-        Object unidade = unidadeSaudeService.findById(id);
+		}
+        return new ResponseEntity<ObjWrapper<Double>>(HttpStatus.NOT_FOUND);
 
-        if(unidade == null){
-            return new ResponseEntity<ObjWrapper<Double>>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<ObjWrapper<Double>>(new ObjWrapper<Double>(unidadeSaudeService.mediaMedica(unidade)), HttpStatus.OK);
     }
 }

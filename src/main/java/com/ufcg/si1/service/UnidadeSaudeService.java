@@ -5,6 +5,7 @@ import exceptions.Rep;
 
 import java.util.List;
 
+import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.model.UnidadeSaude;
 
 public interface UnidadeSaudeService {
@@ -29,7 +30,7 @@ public interface UnidadeSaudeService {
 	 * @param codigo da Unidade buscada
 	 * @return boolean indicando a existencia ou nao de uma unidade
 	 */
-	boolean existe(int codigo);
+	boolean existe(Long id);
 
 	/**
 	 * 
@@ -44,7 +45,9 @@ public interface UnidadeSaudeService {
 	 * @param bairro da Unidade buscada
 	 * @return Unidade que pertence ao bairro especificado
 	 */
-	Object findByBairro(String bairro);
+	List<UnidadeSaude> findByBairro(String bairro);
 
 	Double mediaMedica(Object unidade);
+	
+	List<Especialidade> especialidadesPorUnidade(Long id);
 }
