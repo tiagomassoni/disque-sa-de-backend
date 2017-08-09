@@ -8,18 +8,19 @@ import java.util.Map;
 
 import com.ufcg.si1.model.queixa.Queixa;
 import exceptions.ObjetoInvalidoException;
+import exceptions.QueixaInexistenteException;
+import exceptions.QueixaRegistradaException;
 
 public interface QueixaService {
 
 	Collection<Queixa> findAllQueixas();
 
-	Queixa findById(long id);
+	Queixa findById(Long id);
 
-	void updateQueixa(Queixa user);
+	Queixa updateQueixa(Queixa user) throws QueixaInexistenteException;
 
-	void saveQueixa (Queixa queixa);
 
-	void deleteQueixaById(long id);
+	Queixa deleteQueixaById(Long id) throws QueixaInexistenteException;
 
     /**
      * Verifica a quantidade de queixas no sistema
@@ -31,7 +32,7 @@ public interface QueixaService {
      * Abre uma queixa
      * @param queixa
      */
-	void abrirQueixa(Queixa queixa);
+	Queixa abrirQueixa(Queixa queixa) throws QueixaRegistradaException;
 
 	/**
 	 * Método que calcula a porcentagem a eficiência das queixas;
@@ -52,14 +53,14 @@ public interface QueixaService {
      * @param id - id da queixa
      * @param situacao - nova situação
      */
-    void modificaStatusDaQueixa(Long id, int situacao);
+    Queixa modificaStatusDaQueixa(Long id, int situacao) throws QueixaInexistenteException;
 
     /**
      * Fecha uma determinada queixa passada por id e adiciona o comentário do administrador
      * @param id - id da queixa
      * @param comentario - comentário sobre o desenrolar do processo da queixa
      */
-    void fecharQueixa(Long id, String comentario) throws ObjetoInvalidoException;
+    Queixa fecharQueixa(Long id, String comentario) throws ObjetoInvalidoException, QueixaInexistenteException;
 
 	
 }

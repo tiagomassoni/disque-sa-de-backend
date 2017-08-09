@@ -2,7 +2,11 @@ package com.ufcg.si1.service;
 
 import com.ufcg.si1.model.queixa.Queixa;
 import com.ufcg.si1.model.queixa.STATUS_QUEIXA;
+import com.ufcg.si1.repositories.QueixaRepository;
 import exceptions.ObjetoInvalidoException;
+import exceptions.QueixaInexistenteException;
+import exceptions.QueixaRegistradaException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -13,82 +17,99 @@ import java.util.concurrent.atomic.AtomicLong;
 public class QueixaServiceImpl implements QueixaService {
 
 
-    private final AtomicLong counter = new AtomicLong();
 
-    private Map<Long, Queixa> queixas = new HashMap<>();
+    @Autowired
+    private QueixaRepository queixaRepository;
+
 
 
     @Override
     public Collection<Queixa> findAllQueixas() {
-        return this.queixas.values();
+        return this.queixaRepository.findAll();
     }
 
     @Override
-    public Queixa findById(long id) {
-        return this.queixas.get(id);
-        //FIXME: resolver essa exception
-
-    }
-
-    @Override
-    public void updateQueixa(Queixa queixa) {
-        saveQueixaExistente(queixa);
+    public Queixa findById(Long id) {
+        return this.queixaRepository.findById(id);
 
     }
 
     @Override
-    public void saveQueixa(Queixa queixa) {
-        //recendo uma queixa direto da rest
-        queixa.setId(counter.incrementAndGet());
-        this.queixas.put(queixa.getId(), queixa);
+    public Queixa updateQueixa(Queixa queixa) throws QueixaInexistenteException {
+
+        if(existeQueixa(queixa.getId())){
+            return saveQueixaExistente(queixa);
+        }else{
+            throw new QueixaInexistenteException();
+        }
+
 
     }
+
 
     @Override
-    public void deleteQueixaById(long id) {
-    	this.queixas.remove(id);
+    public Queixa deleteQueixaById(Long id) throws QueixaInexistenteException {
+
+        if(existeQueixa(id)){
+            Queixa deletada = queixaRepository.findById(id);
+            queixaRepository.delete(id);
+            return deletada;
+        }else {
+            throw new QueixaInexistenteException();
+        }
+
     }
+
 
     @Override
     public int size() {
-        return this.queixas.size();
+       return queixaRepository.findAll().size();
     }
 
 
     @Override
-    public void abrirQueixa(Queixa queixa) {
-        queixa.setId(counter.incrementAndGet());
-        this.queixas.put(queixa.getId(), queixa);
+    public Queixa abrirQueixa(Queixa queixa) throws QueixaRegistradaException {
+
+        if( ehQueixaUnica(queixa)){
+
+            return queixaRepository.save(queixa);
+        }else{
+            throw new QueixaRegistradaException();
+        }
+
+
     }
 
     @Override
     public Double getQueixaAbertaPorcentagem() {
 
         int count = 0;
-        for(Long currentId : this.queixas.keySet()){
-
-            Queixa currentQueixa = this.queixas.get(currentId);
-            if(currentQueixa.getSituacao() == STATUS_QUEIXA.ABERTA)
+        Iterator iterator = queixaRepository.findAll().iterator();
+        while(iterator.hasNext()){
+            Queixa currentQueixa = (Queixa) iterator.next();
+            if(ehQueixaAberta(currentQueixa))
                 count++;
-
         }
+
         double result = (double) count/size();
         return new Double(result);
     }
 
     @Override
     public boolean isAberta(Long id) {
-        Queixa currentQueixa = this.queixas.get(id);
-        return (currentQueixa.getSituacao() == STATUS_QUEIXA.ABERTA);
+        Queixa currentQueixa = queixaRepository.findById(id);
+        return ehQueixaAberta(currentQueixa);
     }
 
     @Override
-    public void modificaStatusDaQueixa(Long id, int situacao) {
+    public Queixa modificaStatusDaQueixa(Long id, int situacao) throws QueixaInexistenteException {
 
-        Queixa currentQueixa = this.queixas.get(id);
+        Queixa currentQueixa = this.queixaRepository.findById(id);
         if(currentQueixa != null){
             currentQueixa.setSituacao(verificaQueixa(situacao));
-            saveQueixaExistente(currentQueixa);
+            return saveQueixaExistente(currentQueixa);
+        }else{
+            throw new QueixaInexistenteException();
         }
 
     }
@@ -96,16 +117,21 @@ public class QueixaServiceImpl implements QueixaService {
 
 
     @Override
-    public void fecharQueixa(Long id, String comentario) throws ObjetoInvalidoException {
+    public Queixa fecharQueixa(Long id, String comentario) throws ObjetoInvalidoException, QueixaInexistenteException {
 
-        Queixa currentQueixa = this.queixas.get(id);
-        currentQueixa.fechar(comentario);
-        saveQueixaExistente(currentQueixa);
+        Queixa currentQueixa = this.queixaRepository.findById(id);
+        if(currentQueixa != null){
+            currentQueixa.fechar(comentario);
+            return saveQueixaExistente(currentQueixa);
+        }else{
+            throw new QueixaInexistenteException();
+        }
 
     }
 
-    private void saveQueixaExistente(Queixa queixa){
-        this.queixas.put(queixa.getId(), queixa);
+    private Queixa saveQueixaExistente(Queixa queixa){
+
+        return queixaRepository.save(queixa);
     }
 
     /**
@@ -126,6 +152,20 @@ public class QueixaServiceImpl implements QueixaService {
         }
         return status;
 
+    }
+
+    private boolean existeQueixa(Long id){
+        return queixaRepository.exists(id);
+    }
+
+    private boolean ehQueixaUnica(Queixa queixa){
+
+        return queixaRepository.findByIdAndDescricao(queixa.getId(), queixa.getDescricao()) == null;
+
+    }
+
+    private boolean ehQueixaAberta(Queixa queixa){
+        return queixa.getSituacao() == STATUS_QUEIXA.ABERTA;
     }
 
 

@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.ejb.EJB;
 
+import exceptions.QueixaInexistenteException;
+import exceptions.QueixaRegistradaException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -67,13 +69,13 @@ public class QueixaREST {
 	 * 			Response com o sucesso ou não da requisição
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<?> abrirQueixa(@RequestBody Queixa queixa, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<?> abrirQueixa(@RequestBody Queixa queixa, UriComponentsBuilder ucBuilder) throws QueixaRegistradaException {
         try {
             queixa.abrir();
         } catch (ObjetoInvalidoException e) {
             return new ResponseEntity<List>(HttpStatus.BAD_REQUEST);
         }
-        queixaService.saveQueixa(queixa);
+        queixaService.abrirQueixa(queixa);
 
         return new ResponseEntity<Queixa>(queixa, HttpStatus.CREATED);
     }
@@ -110,7 +112,7 @@ public class QueixaREST {
 	 * 			caso de sucesso o recurso requisitado também será enviado.
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updateQueixa(@PathVariable("id") long id, @RequestBody Queixa queixa) {
+    public ResponseEntity<?> updateQueixa(@PathVariable("id") long id, @RequestBody Queixa queixa) throws QueixaInexistenteException {
 
         Queixa currentQueixa = queixaService.findById(id);
 
@@ -136,7 +138,7 @@ public class QueixaREST {
 	 * 		   Response com o sucesso ou não da requisição.
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable("id") long id) throws QueixaInexistenteException {
 
         Queixa user = queixaService.findById(id);
         if (user == null) {
@@ -157,7 +159,7 @@ public class QueixaREST {
 	 * 			Response com o sucesso ou não da requisição.
 	 */
 	@RequestMapping(value = "/fechamento", method = RequestMethod.POST)
-    public ResponseEntity<?> fecharQueixa(@RequestBody Queixa queixaAFechar) {
+    public ResponseEntity<?> fecharQueixa(@RequestBody Queixa queixaAFechar) throws QueixaInexistenteException {
         try {
 			queixaService.fecharQueixa(queixaAFechar.getId(), " ");
 		} catch (ObjetoInvalidoException e) {

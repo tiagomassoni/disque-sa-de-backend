@@ -32,11 +32,11 @@ public class TestQueixaService {
 
         Assert.assertEquals(0, queixaService.getQueixaAbertaPorcentagem(), 0.005);
 
-        queixaService.abrirQueixa(new Queixa(4, "comi uma lomba e to me cagando todin",
+        queixaService.abrirQueixa(new Queixa("comi uma lomba e to me cagando todin",
                 1, "", new Pessoa("Jose Silva",
                 "jose@gmail.com", "rua dos loco", "PE", "Pedregal")));
 
-        queixaService.abrirQueixa(new Queixa(5, "que?",
+        queixaService.abrirQueixa(new Queixa("que?",
                 1, "", new Pessoa("Jose",
                 "jose@gmail.com", "rua dos loco", "PE", "Belavista")));
 

@@ -12,5 +12,7 @@ public interface QueixaRepository extends JpaRepository<Queixa,  Long> {
 
     Queixa findById(Long id);
 
+    Queixa findByIdAndDescricao(Long id, String descricao);
+
 
 }

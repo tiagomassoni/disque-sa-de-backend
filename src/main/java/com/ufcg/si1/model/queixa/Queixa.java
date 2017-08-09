@@ -10,7 +10,8 @@ import javax.persistence.*;
 public class Queixa {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true)
 	private Long id;
 
 	@Column(name = "descricao")
@@ -138,5 +139,8 @@ public class Queixa {
 		return status;
 
 	}
+
+	//JPA
+    Queixa(){}
 
 }
