@@ -1,4 +1,6 @@
 package com.ufcg.si1.repositories;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ufcg.si1.model.UnidadeSaude;
@@ -21,7 +23,7 @@ public interface UnidadeSaudeRepository extends JpaRepository<UnidadeSaude,  Lon
 	 * @param bairro
 	 * @return unidade de saude com bairro especificado
 	 */
-	UnidadeSaude findByBairro(String bairro);
+	List<UnidadeSaude> findByBairro(String bairro);
 	
 	
 	

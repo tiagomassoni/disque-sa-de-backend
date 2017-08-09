@@ -2,6 +2,7 @@ package com.ufcg.si1.service;
 
 import br.edu.ufcg.Hospital;
 
+import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.model.PostoSaude;
 import com.ufcg.si1.model.UnidadeSaude;
 import com.ufcg.si1.repositories.UnidadeSaudeRepository;
@@ -45,7 +46,7 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
 	}
 
 	@Override
-	public Object findByBairro(String bairro) {
+	public List<UnidadeSaude> findByBairro(String bairro) {
 		return unidades.findByBairro(bairro);
 	}
 
@@ -58,4 +59,10 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
 		}
 		return c;
 	}
+	
+	public List<Especialidade> especialidadesPorUnidade(Long id) {
+		return findById(id).getEspecialidades();
+	}
+
+
 }
