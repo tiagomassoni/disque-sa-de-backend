@@ -4,70 +4,49 @@ import br.edu.ufcg.Hospital;
 
 import com.ufcg.si1.model.PostoSaude;
 import com.ufcg.si1.model.UnidadeSaude;
+import com.ufcg.si1.repositories.UnidadeSaudeRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service("unidadeSaudeService")
 public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
-	private List<UnidadeSaude> unidades;
+	
+	private UnidadeSaudeRepository unidades;
 
-	private int geraCodigo = 0; // para gerar codigos das queixas cadastradas
 
-	public UnidadeSaudeServiceImpl() {
-		unidades = new ArrayList<UnidadeSaude>();
+	@Autowired
+	public UnidadeSaudeServiceImpl(UnidadeSaudeRepository repositorioUnidades) {
+		this.unidades = repositorioUnidades;
 
 	}
 
 	@Override
 	public List<UnidadeSaude> getAll() {
-		return unidades;
+		return unidades.findAll();
 	}
 
 	@Override
 	public void insere(UnidadeSaude unidade) {
-		if (!existe(unidade.pegaCodigo())) {
-			geraCodigo++;
-			unidade.mudaCodigo(geraCodigo);
-			unidades.add(unidade);
-
+		if (!existe(unidade.getId())) {
+			unidades.save(unidade);
 		}
-
 	}
 
 	@Override
-	public boolean existe(int codigo) {
-		boolean existe = false;
-		for (UnidadeSaude unidadeSaude : unidades) {
-			if (unidadeSaude.pegaCodigo() == codigo) {
-				existe = true;
-			}
-		}
-
-		return existe;
+	public boolean existe(Long id) {
+		return unidades.findById(id) != null;
 	}
 
 	public UnidadeSaude findById(long id) {
-		UnidadeSaude resultadoBusca = null;
-		for (UnidadeSaude unidadeSaude : unidades) {
-			if (unidadeSaude.pegaCodigo() == id) {
-				resultadoBusca = unidadeSaude;
-			}
-		}
-
-		return resultadoBusca;
+		return unidades.findById(id);
 	}
 
 	@Override
 	public Object findByBairro(String bairro) {
-		UnidadeSaude resultadoBairro = null;
-		for (UnidadeSaude unidadeSaude : unidades) {
-			if (unidadeSaude.pegaDescricao().equals(bairro)) {
-				resultadoBairro = unidadeSaude;
-			}
-		}
-
-		return resultadoBairro;
+		return unidades.findByBairro(bairro);
 	}
 
 	public Double mediaMedica(Object unidade) {

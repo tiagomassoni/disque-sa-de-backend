@@ -29,7 +29,7 @@ public interface UnidadeSaudeService {
 	 * @param codigo da Unidade buscada
 	 * @return boolean indicando a existencia ou nao de uma unidade
 	 */
-	boolean existe(int codigo);
+	boolean existe(Long id);
 
 	/**
 	 * 
