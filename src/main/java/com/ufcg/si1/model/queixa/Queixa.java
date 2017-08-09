@@ -3,22 +3,32 @@ package com.ufcg.si1.model.queixa;
 import com.ufcg.si1.model.Pessoa;
 import exceptions.ObjetoInvalidoException;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "QUEIXA_TABLE")
 public class Queixa {
 
-	private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
+	@Column(name = "descricao")
 	private String descricao;
 
+	@Column(name = "solicitante", nullable = false)
 	private Pessoa solicitante;
 
+	@Column(name = "situacao")
 	public STATUS_QUEIXA situacao;
 
+	@Column(name = "comentario")
 	private String comentario;
 
 
-	public Queixa(long id, String descricao, int situacao, String comentario,
+	public Queixa(String descricao, int situacao, String comentario,
 				  Pessoa socilitante) {
-		this.id = id;
+
 		this.descricao = descricao;
 		this.situacao = verificaQueixa(situacao);
 		this.comentario = comentario;
