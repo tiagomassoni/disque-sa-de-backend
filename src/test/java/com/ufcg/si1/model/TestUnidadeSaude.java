@@ -5,25 +5,22 @@ import com.ufcg.si1.model.UnidadeSaude;
 import com.ufcg.si1.service.UnidadeSaudeService;
 import com.ufcg.si1.service.UnidadeSaudeServiceImpl;
 
-import br.edu.ufcg.Hospital;
-import exceptions.ObjetoInexistenteException;
 import exceptions.ObjetoJaExistenteException;
 import exceptions.Rep;
 
-
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 
 public class TestUnidadeSaude {
 
 	private UnidadeSaude unidadeCatole;
 	private UnidadeSaude unidadeTambor;
 	private UnidadeSaudeService service;
-	private Object [] listaUnidades;
+	private List<UnidadeSaude> listaUnidades;
 
 	public final static String EnderecoCatole = "Rua Ednaldo Pereira, 666, Catolé";
 	public final static String EnderecoTambor = "Rua Se Juntas ja causa imagina juntas, 598, Tambor";
@@ -62,19 +59,9 @@ public class TestUnidadeSaude {
 
 	@Test
 	public void procuraUnidadeCodigo() {
-		try {
-			Assert.assertEquals(service.procura(1), unidadeTambor);
-			Assert.assertEquals(service.procura(2), unidadeCatole);
-		} catch (Rep | ObjetoInexistenteException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			service.procura(3);
-		} catch (Rep | ObjetoInexistenteException e) {
-			Assert.assertEquals(e.getMessage(), "ExcecaoDados: Não achou unidade");
-
-		}
+		Assert.assertEquals(service.findById(1), unidadeTambor);
+		Assert.assertEquals(service.findById(2), unidadeCatole);
+		Assert.assertEquals(service.findById(3), null);
 
 	}
 
@@ -84,25 +71,25 @@ public class TestUnidadeSaude {
 		Assert.assertEquals(service.findByBairro(EnderecoTambor), unidadeTambor);
 		Assert.assertEquals(service.findByBairro(EnderecoInvalido), null);
 	}
-	
-	
+
 	@Test
 	public void unidadesExistentes() {
-		listaUnidades = new Object[100];
-		listaUnidades[1] = unidadeCatole;
-		listaUnidades[0] = unidadeTambor;
-		Assert.assertEquals(Arrays.asList(listaUnidades), service.getAll());
+		listaUnidades = new ArrayList<UnidadeSaude>();
+		listaUnidades.add(unidadeTambor);
+		listaUnidades.add(unidadeCatole);
+		
+		Assert.assertEquals((listaUnidades), service.getAll());
 	}
-	
+
 	@Test
 	public void mediaMedicoPorPacientePostoDeSaude() {
 		Assert.assertEquals(service.mediaMedica((Object) unidadeCatole), 1.33333333, 0.01);
 		Assert.assertEquals(service.mediaMedica((Object) unidadeTambor), 2.66666666, 0.01);
 	}
-	
+
 	@Test
 	public void mediaMedicoPorPacienteUnidadeSaude() {
-		//TODO: Nao consegui testar, a classe Hospital so esta disponivel como .jar	
+		// TODO: Nao consegui testar, a classe Hospital so esta disponivel como .jar
 	}
 
 }
