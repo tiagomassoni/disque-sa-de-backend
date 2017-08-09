@@ -1,5 +1,6 @@
 package com.ufcg.si1.controller;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -21,7 +22,7 @@ import com.ufcg.si1.util.CustomErrorType;
 import exceptions.ObjetoInvalidoException;
 
 @RestController
-@RequestMapping("/queixa")
+@RequestMapping("/api/queixa")
 @CrossOrigin
 public class QueixaREST {
 	
@@ -42,14 +43,14 @@ public class QueixaREST {
 	 * 		   caso de sucesso, o recurso requisitado também será
 	 * 		   enviado.
 	 */
-	@RequestMapping(value = "/queixa/", method = RequestMethod.GET)
-    public ResponseEntity<List<Queixa>> listAllUsers() {
-        List<Queixa> queixas = queixaService.findAllQueixas();
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+    public ResponseEntity<Collection<Queixa>> listAllUsers() {
+		Collection<Queixa> queixas = queixaService.findAllQueixas();
 
         if (queixas.isEmpty()) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<List<Queixa>>(queixas, HttpStatus.OK);
+        return new ResponseEntity<Collection<Queixa>>(queixas, HttpStatus.OK);
     }
 	
 	/**
@@ -63,7 +64,7 @@ public class QueixaREST {
 	 * @return
 	 * 			Response com o sucesso ou não da requisição
 	 */
-	@RequestMapping(value = "/queixa/", method = RequestMethod.POST)
+	@RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<?> abrirQueixa(@RequestBody Queixa queixa, UriComponentsBuilder ucBuilder) {
         try {
             queixa.abrir();
@@ -83,7 +84,7 @@ public class QueixaREST {
 	 * 			Response com o sucesso ou não da requisição. Para o
 	 * 			caso de sucesso o recurso requisitado também será enviado.
 	 */
-	@RequestMapping(value = "/queixa/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> consultarQueixa(@PathVariable("id") long id) {
 
         Queixa q = queixaService.findById(id);
@@ -106,7 +107,7 @@ public class QueixaREST {
 	 * 			Response com o sucesso ou não da requisição. Para o 
 	 * 			caso de sucesso o recurso requisitado também será enviado.
 	 */
-	@RequestMapping(value = "/queixa/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> updateQueixa(@PathVariable("id") long id, @RequestBody Queixa queixa) {
 
         Queixa currentQueixa = queixaService.findById(id);
@@ -132,7 +133,7 @@ public class QueixaREST {
 	 * @return
 	 * 		   Response com o sucesso ou não da requisição.
 	 */
-	@RequestMapping(value = "/queixa/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
 
         Queixa user = queixaService.findById(id);
@@ -153,10 +154,14 @@ public class QueixaREST {
 	 * @return
 	 * 			Response com o sucesso ou não da requisição.
 	 */
-	@RequestMapping(value = "/queixa/fechamento", method = RequestMethod.POST)
+	@RequestMapping(value = "/fechamento", method = RequestMethod.POST)
     public ResponseEntity<?> fecharQueixa(@RequestBody Queixa queixaAFechar) {
-        queixaAFechar.situacao = Queixa.FECHADA;
-        queixaService.updateQueixa(queixaAFechar);
+        try {
+			queixaService.fecharQueixa(queixaAFechar.getId(), " ");
+		} catch (ObjetoInvalidoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return new ResponseEntity<Queixa>(queixaAFechar, HttpStatus.OK);
     }
 }

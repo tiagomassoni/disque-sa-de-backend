@@ -13,9 +13,9 @@ import java.util.concurrent.atomic.AtomicLong;
 public class QueixaServiceImpl implements QueixaService {
 
 
-    private static final AtomicLong counter = new AtomicLong();
+    private final AtomicLong counter = new AtomicLong();
 
-    private static Map<Long, Queixa> queixas = new HashMap<>();
+    private Map<Long, Queixa> queixas = new HashMap<>();
 
 
     @Override
@@ -46,7 +46,7 @@ public class QueixaServiceImpl implements QueixaService {
 
     @Override
     public void deleteQueixaById(long id) {
-        this.queixas.remove(id);
+    	this.queixas.remove(id);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class QueixaServiceImpl implements QueixaService {
                 count++;
 
         }
-        double result = count/size();
+        double result = (double) count/size();
         return new Double(result);
     }
 
