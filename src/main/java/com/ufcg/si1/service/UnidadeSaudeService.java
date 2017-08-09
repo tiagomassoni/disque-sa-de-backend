@@ -7,20 +7,44 @@ import java.util.List;
 
 import com.ufcg.si1.model.UnidadeSaude;
 
-
 public interface UnidadeSaudeService {
-  
 
-    List<UnidadeSaude> getAll();
+	/**
+	 * 
+	 * @return todas as unidades
+	 */
+	List<UnidadeSaude> getAll();
 
-    void insere(UnidadeSaude unidade)throws Rep,
-            ObjetoJaExistenteException;
+	/**
+	 * Insere uma unidade no repositorio
+	 * 
+	 * @param unidade
+	 * @throws Rep
+	 * @throws ObjetoJaExistenteException
+	 */
+	void insere(UnidadeSaude unidade) throws Rep, ObjetoJaExistenteException;
 
-    boolean existe(int codigo);
+	/**
+	 * 
+	 * @param codigo da Unidade buscada
+	 * @return boolean indicando a existencia ou nao de uma unidade
+	 */
+	boolean existe(int codigo);
 
-    UnidadeSaude findById(long id);
+	/**
+	 * 
+	 * @param id da Unidade buscada
+	 * @return Unidade que possude id especificado
+	 * 
+	 */
+	UnidadeSaude findById(long id);
 
-    Object findByBairro(String bairro);
-    
-    Double mediaMedica(Object unidade);
+	/**
+	 * 
+	 * @param bairro da Unidade buscada
+	 * @return Unidade que pertence ao bairro especificado
+	 */
+	Object findByBairro(String bairro);
+
+	Double mediaMedica(Object unidade);
 }
