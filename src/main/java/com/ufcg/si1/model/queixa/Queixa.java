@@ -1,48 +1,53 @@
-package com.ufcg.si1.model;
+package com.ufcg.si1.model.queixa;
 
+import com.ufcg.si1.model.Pessoa;
 import exceptions.ObjetoInvalidoException;
 
 public class Queixa {
 
-	public static final int ABERTA = 1;
-	public static final int EM_ANDAMENTO = 2;
-	public static final int FECHADA = 3;
-	
 	private long id;
 
 	private String descricao;
 
 	private Pessoa solicitante;
 
-	public int situacao; 
+	public STATUS_QUEIXA situacao;
 
 	private String comentario;
 
-	public Queixa(){
-		id=0;
-	}
 
 	public Queixa(long id, String descricao, int situacao, String comentario,
-                  String nome, String email,
-				  String rua, String uf, String cidade) {
+				  Pessoa socilitante) {
 		this.id = id;
 		this.descricao = descricao;
-		this.situacao = situacao;
+		this.situacao = verificaQueixa(situacao);
 		this.comentario = comentario;
-		this.solicitante = new Pessoa(nome, email, rua, uf, cidade);
+		this.solicitante = socilitante;
+	}
+
+	//FIXME: eu não sei deveria ter esse construtor aqui, acho mais elegante e pode ser usado
+	//em alguma parte do código
+	public Queixa(long id, String descricao, Pessoa solicitante) {
+
+		//FIXME: esse id passado por parametro tá muito feio
+
+		this.id = id;
+		this.descricao = descricao;
+		this.solicitante = solicitante;
 	}
 	
 	public void abrir() throws ObjetoInvalidoException {
-		if (this.situacao != EM_ANDAMENTO)
-			this.situacao = ABERTA;
+
+
+		if (this.situacao != STATUS_QUEIXA.ABERTA)
+			this.situacao = STATUS_QUEIXA.ABERTA;
 		else
 			throw new ObjetoInvalidoException("Status inválido");
 	}
 
 	public void fechar(String coment) throws ObjetoInvalidoException {
-		if (this.situacao == EM_ANDAMENTO
-				|| this.situacao == ABERTA) {
-			this.situacao = FECHADA;
+		if (this.situacao != STATUS_QUEIXA.FECHADA) {
+			this.situacao = STATUS_QUEIXA.FECHADA;
 			this.comentario = coment;
 		} else
 			throw new ObjetoInvalidoException("Status inválido");
@@ -64,8 +69,12 @@ public class Queixa {
 		this.descricao = descricao;
 	}
 
-	public int getSituacao() {
+	public STATUS_QUEIXA getSituacao() {
 		return situacao;
+	}
+
+	public void setSituacao(STATUS_QUEIXA status){
+		this.situacao = status;
 	}
 
 	public String getComentario() {
@@ -105,4 +114,19 @@ public class Queixa {
 			return false;
 		return true;
 	}
+
+	private STATUS_QUEIXA verificaQueixa(int situacao){
+
+		STATUS_QUEIXA status;
+		if(situacao == 1){
+			status = STATUS_QUEIXA.ABERTA;
+		}else if(situacao == 2){
+			status = STATUS_QUEIXA.EM_ANDAMENTO;
+		}else{
+			status = STATUS_QUEIXA.FECHADA;
+		}
+		return status;
+
+	}
+
 }

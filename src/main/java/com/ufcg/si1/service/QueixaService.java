@@ -1,23 +1,23 @@
 package com.ufcg.si1.service;
 
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import com.ufcg.si1.model.Queixa;
+import com.ufcg.si1.model.queixa.Queixa;
+import exceptions.ObjetoInvalidoException;
 
 public interface QueixaService {
 
-	List<Queixa> findAllQueixas();
-
-
-    void saveQueixa(Queixa queixa);
-
+	Collection<Queixa> findAllQueixas();
 
 	Queixa findById(long id);
 
 	void updateQueixa(Queixa user);
 
+	void saveQueixa (Queixa queixa);
 
 	void deleteQueixaById(long id);
 
@@ -27,8 +27,10 @@ public interface QueixaService {
      */
     int size();
 
-	Iterator<Queixa> getIterator();
-
+    /**
+     * Abre uma queixa
+     * @param queixa
+     */
 	void abrirQueixa(Queixa queixa);
 
 	/**
@@ -57,10 +59,7 @@ public interface QueixaService {
      * @param id - id da queixa
      * @param comentario - comentário sobre o desenrolar do processo da queixa
      */
-    void fecharQueixa(Long id, String comentario);
+    void fecharQueixa(Long id, String comentario) throws ObjetoInvalidoException;
 
-
-//	boolean isUserExi
-// st(Queixa user);
 	
 }
