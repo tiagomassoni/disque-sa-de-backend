@@ -19,7 +19,8 @@ public class UnidadeSaude {
     @GeneratedValue(strategy=GenerationType.AUTO) 
     private Long id; 
 
-    @Column(name="endereco", nullable=false)
+    @JoinColumn(name="endereco", nullable=false)
+    @OneToOne
     private Endereco endereço;
 
     private List especialidades = new ArrayList();
