@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class QueixaServiceImpl implements QueixaService {
 
 
-
     @Autowired
     private QueixaRepository queixaRepository;
 

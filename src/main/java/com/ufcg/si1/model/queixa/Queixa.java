@@ -2,8 +2,11 @@ package com.ufcg.si1.model.queixa;
 
 import com.ufcg.si1.model.Pessoa;
 import exceptions.ObjetoInvalidoException;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+
+import static javax.persistence.CascadeType.*;
 
 @Entity
 @Table(name = "QUEIXA_TABLE")
@@ -17,10 +20,12 @@ public class Queixa {
 	@Column(name = "descricao")
 	private String descricao;
 
-	@Column(name = "solicitante", nullable = false)
+	@ManyToOne
+    @JoinColumn(nullable = false)
 	private Pessoa solicitante;
 
 	@Column(name = "situacao")
+    @Enumerated(EnumType.STRING)
 	public STATUS_QUEIXA situacao;
 
 	@Column(name = "comentario")
@@ -141,6 +146,6 @@ public class Queixa {
 	}
 
 	//JPA
-    Queixa(){}
+    public Queixa(){}
 
 }
