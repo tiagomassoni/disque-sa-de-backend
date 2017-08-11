@@ -16,10 +16,6 @@ import javax.persistence.Id;
 @Entity
 public class QueixaStatusAberta extends QueixaState{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @Override
     public QueixaState abrir() throws QueixaStatusException {
         throw new QueixaStatusException("A queixa já está aberta.");
