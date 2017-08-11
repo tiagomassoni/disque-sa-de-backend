@@ -1,4 +1,4 @@
-package com.ufcg.si1.model.queixa;
+package com.ufcg.si1.model.queixa.stateQueixa;
 
 import javax.print.DocFlavor;
 

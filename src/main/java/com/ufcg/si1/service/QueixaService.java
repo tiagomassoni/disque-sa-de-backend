@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.ufcg.si1.model.queixa.Queixa;
 import exceptions.ObjetoInvalidoException;
+import exceptions.QueixaException;
 import exceptions.QueixaInexistenteException;
 import exceptions.QueixaRegistradaException;
 
@@ -48,19 +49,13 @@ public interface QueixaService {
      */
 	boolean isAberta(Long id);
 
-    /**
-     * Modifica o status de uma determinada queixa para o códido da situação atual.
-     * @param id - id da queixa
-     * @param situacao - nova situação
-     */
-    Queixa modificaStatusDaQueixa(Long id, int situacao) throws QueixaInexistenteException;
 
     /**
      * Fecha uma determinada queixa passada por id e adiciona o comentário do administrador
      * @param id - id da queixa
      * @param comentario - comentário sobre o desenrolar do processo da queixa
      */
-    Queixa fecharQueixa(Long id, String comentario) throws ObjetoInvalidoException, QueixaInexistenteException;
+    Queixa fecharQueixa(Long id, String comentario) throws ObjetoInvalidoException, QueixaInexistenteException, QueixaException;
 
 	
 }

@@ -1,10 +1,11 @@
 package com.ufcg.si1.model;
 
 import com.ufcg.si1.model.queixa.Queixa;
-import com.ufcg.si1.model.queixa.STATUS_QUEIXA;
+import com.ufcg.si1.model.queixa.stateQueixa.STATUS_QUEIXA;
 
 import exceptions.ObjetoInvalidoException;
 
+import exceptions.QueixaException;
 import org.junit.*;
 
 /**
@@ -31,9 +32,9 @@ public class TestQueixa {
 				  "Cachoeira dos Guedes", "Paraiba", "Guarabira");
 		priscyla = new Pessoa("Priscyla", "pri@gmailcom",
 				  "Rua João Maurício", "Paraiba", "João Pessoa");
-		queixa1 = new Queixa(5, "Comi uma teju e vomitei", 1, "", taigo);
-		queixa2 = new Queixa(6, "Bati um lampião de gás na cabeça", 2, "", ednaldo);
-		queixa3 = new Queixa(7, "Tomei muitos ansiolíticos de uma vez", 3, "", priscyla);
+		queixa1 = new Queixa( "Comi uma teju e vomitei", 1, "", taigo);
+		queixa2 = new Queixa( "Bati um lampião de gás na cabeça", 2, "", ednaldo);
+		queixa3 = new Queixa( "Tomei muitos ansiolíticos de uma vez", 3, "", priscyla);
 	}
 		
 	@Test
@@ -42,7 +43,7 @@ public class TestQueixa {
 			Assert.assertEquals(STATUS_QUEIXA.FECHADA, queixa3.getSituacao());
 			queixa3.abrir();
 			Assert.assertEquals(STATUS_QUEIXA.ABERTA, queixa3.getSituacao());
-		} catch (ObjetoInvalidoException e) {
+		} catch (QueixaException e) {
 			e.printStackTrace();
 		}
 	}
@@ -51,7 +52,7 @@ public class TestQueixa {
 	public void abrirException() {
 		try {
 			queixa2.abrir();
-		} catch (ObjetoInvalidoException e) {
+		} catch (QueixaException e) {
 			Assert.assertEquals("ExcecaoDados: Status inválido", e.getMessage());
 		}
 	}
@@ -66,7 +67,7 @@ public class TestQueixa {
 			Assert.assertEquals(STATUS_QUEIXA.EM_ANDAMENTO, queixa2.getSituacao());
 			queixa2.fechar("Nunca não");
 			Assert.assertEquals(STATUS_QUEIXA.FECHADA, queixa2.getSituacao());
-		} catch (ObjetoInvalidoException e) {
+		} catch (QueixaException e) {
 			e.printStackTrace();
 		}
 	}
@@ -75,7 +76,7 @@ public class TestQueixa {
 	public void fecharException() {
 		try {
 			queixa3.fechar("Foi sem querer");
-		} catch (ObjetoInvalidoException e) {
+		} catch (QueixaException e) {
 			Assert.assertEquals("ExcecaoDados: Status inválido", e.getMessage());
 		}
 	}

@@ -1,16 +1,16 @@
 package com.ufcg.si1.service;
 
 import com.ufcg.si1.model.queixa.Queixa;
-import com.ufcg.si1.model.queixa.STATUS_QUEIXA;
+import com.ufcg.si1.model.queixa.stateQueixa.STATUS_QUEIXA;
 import com.ufcg.si1.repositories.QueixaRepository;
 import exceptions.ObjetoInvalidoException;
+import exceptions.QueixaException;
 import exceptions.QueixaInexistenteException;
 import exceptions.QueixaRegistradaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 
 @Service("queixaService")
@@ -101,22 +101,7 @@ public class QueixaServiceImpl implements QueixaService {
     }
 
     @Override
-    public Queixa modificaStatusDaQueixa(Long id, int situacao) throws QueixaInexistenteException {
-
-        Queixa currentQueixa = this.queixaRepository.findById(id);
-        if(currentQueixa != null){
-            currentQueixa.setSituacao(verificaQueixa(situacao));
-            return saveQueixaExistente(currentQueixa);
-        }else{
-            throw new QueixaInexistenteException();
-        }
-
-    }
-
-
-
-    @Override
-    public Queixa fecharQueixa(Long id, String comentario) throws ObjetoInvalidoException, QueixaInexistenteException {
+    public Queixa fecharQueixa(Long id, String comentario) throws QueixaException {
 
         Queixa currentQueixa = this.queixaRepository.findById(id);
         if(currentQueixa != null){
@@ -128,35 +113,26 @@ public class QueixaServiceImpl implements QueixaService {
 
     }
 
+    /**
+     * Salva uma queixa existente no repositório
+     * @param queixa
+     * @return queixa salva
+     */
     private Queixa saveQueixaExistente(Queixa queixa){
 
         return queixaRepository.save(queixa);
     }
 
-    /**
-     * Retorna o status (enum) de uma queixa dado um codigo
-     * @param situacao - codigo da situacao
-     * @return - enum que representa a situação
-     *
+    /*
+    verifica se a queixa existe no repositorio
      */
-    private STATUS_QUEIXA verificaQueixa(int situacao){
-
-        STATUS_QUEIXA status;
-        if(situacao == 1){
-            status = STATUS_QUEIXA.ABERTA;
-        }else if(situacao == 2){
-            status = STATUS_QUEIXA.EM_ANDAMENTO;
-        }else{
-            status = STATUS_QUEIXA.FECHADA;
-        }
-        return status;
-
-    }
-
     private boolean existeQueixa(Long id){
         return queixaRepository.exists(id);
     }
 
+    /*
+    Verifica se a queixa é única
+     */
     private boolean ehQueixaUnica(Queixa queixa){
 
         return queixaRepository.findByIdAndDescricao(queixa.getId(), queixa.getDescricao()) == null;
@@ -164,7 +140,7 @@ public class QueixaServiceImpl implements QueixaService {
     }
 
     private boolean ehQueixaAberta(Queixa queixa){
-        return queixa.getSituacao() == STATUS_QUEIXA.ABERTA;
+        return queixa.getSituacao().status() == STATUS_QUEIXA.ABERTA;
     }
 
 

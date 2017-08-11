@@ -46,8 +46,8 @@ public class TestUnidadeSaude {
 
 	@Test
 	public void insereUnidade() {
-		Assert.assertEquals(service.existe(2), true);
-		Assert.assertEquals(service.existe(1), true);
+		Assert.assertEquals(service.existe(new Long(2)), true);
+		Assert.assertEquals(service.existe(new Long(1)), true);
 
 		try {
 			service.insere(unidadeTambor);
