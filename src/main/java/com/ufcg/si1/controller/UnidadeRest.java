@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ import exceptions.Rep;
 @CrossOrigin
 public class UnidadeRest {
 	
-	@EJB
+	@Autowired
 	private UnidadeSaudeService unidadeSaudeService;
 	
 	/**

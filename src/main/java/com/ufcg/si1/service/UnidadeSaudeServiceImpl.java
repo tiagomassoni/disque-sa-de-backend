@@ -12,21 +12,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service("unidadeSaudeService")
+@Service
 public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
-	
-	private UnidadeSaudeRepository unidades;
-
 
 	@Autowired
-	public UnidadeSaudeServiceImpl(UnidadeSaudeRepository repositorioUnidades) {
-		this.unidades = repositorioUnidades;
-
-	}
-
-    public UnidadeSaudeServiceImpl() {
-
-    }
+	private UnidadeSaudeRepository unidades;
 
     @Override
 	public List<UnidadeSaude> getAll() {

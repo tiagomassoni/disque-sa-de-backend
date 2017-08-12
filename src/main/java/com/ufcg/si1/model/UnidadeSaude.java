@@ -23,7 +23,9 @@ public class UnidadeSaude {
     @OneToOne
     private Endereco endereço;
 
-    private List especialidades = new ArrayList();
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn
+    private List<Especialidade> especialidades;
 
     private long [] numeroQueixas = new long[1000];
     int contador = 0;
@@ -32,6 +34,10 @@ public class UnidadeSaude {
         if (this instanceof PostoSaude){
             numeroQueixas[contador++] = id;
         }
+    }
+
+    public void setEspecialidades(List<Especialidade> especialidades){
+        this.especialidades = especialidades;
     }
 
     public List<Especialidade> getEspecialidades() {

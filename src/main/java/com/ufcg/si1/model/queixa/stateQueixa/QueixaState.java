@@ -15,7 +15,7 @@ import javax.persistence.*;
 public abstract class QueixaState {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(updatable = false, nullable = false)
     protected Long id;
 
