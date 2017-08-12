@@ -1,26 +1,48 @@
 package com.ufcg.si1.model.queixa;
 
 import com.ufcg.si1.model.Pessoa;
-import exceptions.ObjetoInvalidoException;
+import com.ufcg.si1.model.queixa.stateQueixa.QueixaState;
+import com.ufcg.si1.model.queixa.stateQueixa.QueixaStatusAberta;
+import com.ufcg.si1.model.queixa.stateQueixa.STATUS_QUEIXA;
+import exceptions.QueixaException;
 
+import javax.persistence.*;
+
+import java.util.Date;
+
+@Entity
+@Table(name = "QUEIXA_TABLE")
 public class Queixa {
 
-	private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true)
+	private Long id;
 
+	@Column(name = "descricao")
 	private String descricao;
 
+	@ManyToOne
+    @JoinColumn(nullable = false)
 	private Pessoa solicitante;
 
-	public STATUS_QUEIXA situacao;
+	@OneToOne
+    @JoinColumn(nullable = false)
+	public QueixaState situacao;
 
+	@Column
 	private String comentario;
 
+	@Version
+    @Temporal(TemporalType.DATE)
+    private Date publicacaoData;
 
-	public Queixa(long id, String descricao, int situacao, String comentario,
+
+	public Queixa(String descricao, int situacao, String comentario,
 				  Pessoa socilitante) {
-		this.id = id;
+
 		this.descricao = descricao;
-		this.situacao = verificaQueixa(situacao);
+		this.situacao = new QueixaStatusAberta();
 		this.comentario = comentario;
 		this.solicitante = socilitante;
 	}
@@ -35,22 +57,19 @@ public class Queixa {
 		this.descricao = descricao;
 		this.solicitante = solicitante;
 	}
-	
-	public void abrir() throws ObjetoInvalidoException {
 
 
-		if (this.situacao != STATUS_QUEIXA.ABERTA)
-			this.situacao = STATUS_QUEIXA.ABERTA;
-		else
-			throw new ObjetoInvalidoException("Status inválido");
+
+	public void abrir() throws QueixaException {
+
+		this.situacao.abrir();
 	}
 
-	public void fechar(String coment) throws ObjetoInvalidoException {
-		if (this.situacao != STATUS_QUEIXA.FECHADA) {
-			this.situacao = STATUS_QUEIXA.FECHADA;
-			this.comentario = coment;
-		} else
-			throw new ObjetoInvalidoException("Status inválido");
+	public void fechar(String coment) throws QueixaException {
+
+	    this.comentario = coment;
+	    this.situacao.fechar();
+
 	}
 
 	public long getId() {
@@ -69,14 +88,6 @@ public class Queixa {
 		this.descricao = descricao;
 	}
 
-	public STATUS_QUEIXA getSituacao() {
-		return situacao;
-	}
-
-	public void setSituacao(STATUS_QUEIXA status){
-		this.situacao = status;
-	}
-
 	public String getComentario() {
 		return comentario;
 	}
@@ -84,6 +95,14 @@ public class Queixa {
 	public void setComentario(String comentario) {
 		this.comentario = comentario;
 	}
+
+	public void setSituacao(QueixaState status){
+	    this.situacao = status;
+    }
+
+    public QueixaState getSituacao(){
+	    return this.situacao;
+    }
 
 	public Pessoa getSolicitante() {
 		return solicitante;
@@ -128,5 +147,8 @@ public class Queixa {
 		return status;
 
 	}
+
+	//JPA
+    public Queixa(){}
 
 }

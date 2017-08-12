@@ -2,7 +2,10 @@ package com.ufcg.si1.service;
 
 import com.ufcg.si1.model.Pessoa;
 import com.ufcg.si1.model.queixa.Queixa;
+import com.ufcg.si1.repositories.QueixaRepository;
+import exceptions.QueixaRegistradaException;
 import org.junit.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static junit.framework.TestCase.fail;
 
@@ -19,9 +22,24 @@ public class TestQueixaService {
     private static final String QUEIXA_ENCERRADA_EXCEPTION = "Queixa já foi fechada. Não pode ser reaberta";
     private static final String QUEIXA_INEXISTENTE = "Queixa inexistente";
 
+    private static final Queixa queixaDummy1 = new Queixa("Passei mal com uma coxinha",
+            3, "", new Pessoa("Jose Silva",
+            "jose@gmail.com", "rua dos tolos", "PE", "Recife"));
+
+    private static final Queixa queixaDummy2 = new Queixa( "to lascadao aqui vei",
+            3, "se fodeu", new Pessoa("Jose Silva",
+            "j123ose@gmail.com", "rua dos tolos", "PE", "PERNAMBUCO"));
+
+    private static final Queixa queixaDummy3 = new Queixa("comprei uma parada estragada",
+            3, "se fodeu", new Pessoa("zezin",
+            "jose@gmail.com", "rua dos tolos", "DF", "PARAIBA"));
+
+
+    @Autowired
+    QueixaRepository queixaRepository;
 
     @Before
-    public void setup() {
+    public void setup() throws QueixaRegistradaException {
         queixaService = new QueixaServiceImpl();
         dummyQueixas();
     }
@@ -32,19 +50,23 @@ public class TestQueixaService {
 
         Assert.assertEquals(0, queixaService.getQueixaAbertaPorcentagem(), 0.005);
 
-        queixaService.abrirQueixa(new Queixa(4, "comi uma lomba e to me cagando todin",
+        Queixa queixa1 = new Queixa("comi uma lomba e to me cagando todin",
                 1, "", new Pessoa("Jose Silva",
-                "jose@gmail.com", "rua dos loco", "PE", "Pedregal")));
+                "jose@gmail.com", "rua dos loco", "PE", "Pedregal"));
 
-        queixaService.abrirQueixa(new Queixa(5, "que?",
+        Queixa queixa2 = new Queixa("que?",
                 1, "", new Pessoa("Jose",
-                "jose@gmail.com", "rua dos loco", "PE", "Belavista")));
+                "jose@gmail.com", "rua dos loco", "PE", "Belavista"));
+
+        queixaService.abrirQueixa(queixa1);
+
+        queixaService.abrirQueixa(queixa2);
 
         Assert.assertEquals(0.4, queixaService.getQueixaAbertaPorcentagem(), 0.005);
 
-        queixaService.deleteQueixaById(1);
-        queixaService.deleteQueixaById(2);
-        queixaService.deleteQueixaById(3);
+        queixaService.deleteQueixaById(queixaDummy1.getId());
+        queixaService.deleteQueixaById(queixaDummy2.getId());
+        queixaService.deleteQueixaById(queixaDummy3.getId());
 
         Assert.assertEquals(1.0, queixaService.getQueixaAbertaPorcentagem(), 0.005);
     }
@@ -54,13 +76,13 @@ public class TestQueixaService {
         //US4: das que precisam ser adicionadas
 
 
-        queixaService.abrirQueixa(new Queixa(4, "comi uma lomba e to me cagando todin",
+        queixaService.abrirQueixa(new Queixa( "comi uma lomba e to me cagando todin",
                 1, "", new Pessoa("Jose Silva",
                 "jose@gmail.com", "rua dos loco", "PE", "Pedregal")));
 
         Assert.assertEquals(4, queixaService.size());
 
-        queixaService.abrirQueixa(new Queixa(5, "que?",
+        queixaService.abrirQueixa(new Queixa( "que?",
                 1, "", new Pessoa("Jose do rego",
                 "jose@gmail.com", "rua dos loco", "PE", "Belavista")));
 
@@ -69,11 +91,11 @@ public class TestQueixaService {
         Assert.assertEquals(true, queixaService.isAberta(new Long(4)));
 
         //Esse número mágico Queixa.FECHADA precisa ser trocado por um enum.
-        queixaService.modificaStatusDaQueixa(new Long(4), 3);
+        queixaService.fecharQueixa(new Long(4), "fechada");
         Assert.assertEquals(false, queixaService.isAberta(new Long(4)));
 
         try{
-            queixaService.modificaStatusDaQueixa(new Long(4), 3);
+            queixaService.fecharQueixa(new Long(4), "fechando de novo");
         } catch (Exception e){
             Assert.assertEquals(QUEIXA_ENCERRADA_EXCEPTION, e.getMessage());
             //esta linha precisa ser executada
@@ -95,17 +117,17 @@ public class TestQueixaService {
 
         Assert.assertEquals(3, queixaService.size());
 
-        queixaService.deleteQueixaById(1);
+        queixaService.deleteQueixaById(queixaDummy1.getId());
         Assert.assertEquals(2, queixaService.size());
 
-        queixaService.deleteQueixaById(2);
+        queixaService.deleteQueixaById(queixaDummy2.getId());
         Assert.assertEquals(1, queixaService.size());
 
-        queixaService.deleteQueixaById(3);
+        queixaService.deleteQueixaById(queixaDummy3.getId());
         Assert.assertEquals(0, queixaService.size());
 
         try{
-            queixaService.deleteQueixaById(1);
+            queixaService.deleteQueixaById(queixaDummy1.getId());
         } catch (Exception e){
 
             Assert.assertEquals(QUEIXA_INEXISTENTE, e.getMessage());
@@ -119,16 +141,16 @@ public class TestQueixaService {
     @Test
     public void testeFindByIdAndEquals() throws Exception {
 
-        Queixa q1 = new Queixa(1, "Passei mal com uma coxinha",
+        Queixa q1 = new Queixa("Passei mal com uma coxinha",
                3, "", new Pessoa("Jose Silva",
                 "jose@gmail.com", "rua dos tolos", "PE", "Recife"));
 
-        Assert.assertEquals(q1, queixaService.findById(1));
+        Assert.assertEquals(q1, queixaService.findById(q1.getId()));
 
-        Assert.assertNotEquals(q1, queixaService.findById(2));
+        Assert.assertNotEquals(q1, queixaService.findById(queixaDummy1.getId()));
 
         try{
-            Queixa q = queixaService.findById(99);
+            Queixa q = queixaService.findById(new Long(-69));
         } catch (Exception e){
             Assert.assertEquals(QUEIXA_INEXISTENTE, e.getMessage());
             fail();
@@ -139,19 +161,13 @@ public class TestQueixaService {
 
 
 
-    private void dummyQueixas(){
+    private void dummyQueixas() throws QueixaRegistradaException {
 
-        queixaService.abrirQueixa(new Queixa(1, "Passei mal com uma coxinha",
-               3, "", new Pessoa("Jose Silva",
-                "jose@gmail.com", "rua dos tolos", "PE", "Recife")));
+        queixaService.abrirQueixa(queixaDummy1);
 
-        queixaService.abrirQueixa(new Queixa(2, "to lascadao aqui vei",
-                3, "se fodeu", new Pessoa("Jose Silva",
-                "j123ose@gmail.com", "rua dos tolos", "PE", "PERNAMBUCO")));
+        queixaService.abrirQueixa(queixaDummy2);
 
-        queixaService.abrirQueixa(new Queixa(3, "comprei uma parada estragada",
-                3, "se fodeu", new Pessoa("zezin",
-                "jose@gmail.com", "rua dos tolos", "DF", "PARAIBA")));
+        queixaService.abrirQueixa(queixaDummy3);
     }
 
 }

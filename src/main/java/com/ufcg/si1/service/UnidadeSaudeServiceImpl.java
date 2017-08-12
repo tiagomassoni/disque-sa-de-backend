@@ -24,7 +24,11 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
 
 	}
 
-	@Override
+    public UnidadeSaudeServiceImpl() {
+
+    }
+
+    @Override
 	public List<UnidadeSaude> getAll() {
 		return unidades.findAll();
 	}
