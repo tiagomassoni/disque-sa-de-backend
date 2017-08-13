@@ -6,26 +6,29 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.*;
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = PostoSaude.class, name = "posto")
 })
+@Entity
 public class UnidadeSaude {
-    private int codigo;
 
-    private String descricao;
+    @Id 
+    @GeneratedValue(strategy=GenerationType.AUTO) 
+    private Long id; 
 
-    private List especialidades = new ArrayList();
+    @JoinColumn(name="endereco", nullable=false)
+    @OneToOne
+    private Endereco endereço;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn
+    private List<Especialidade> especialidades;
 
     private long [] numeroQueixas = new long[1000];
     int contador = 0;
-
-    public UnidadeSaude(String descricao) {
-        this.codigo = 0; // gerado no repositorio
-        this.descricao = descricao;
-    }
-    public UnidadeSaude(){
-    }
 
     public void addQueixaProxima(long id) {
         if (this instanceof PostoSaude){
@@ -33,12 +36,8 @@ public class UnidadeSaude {
         }
     }
 
-    public String pegaDescricao() {
-        return this.descricao;
-    }
-
-    public void mudaDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setEspecialidades(List<Especialidade> especialidades){
+        this.especialidades = especialidades;
     }
 
     public List<Especialidade> getEspecialidades() {
@@ -49,12 +48,17 @@ public class UnidadeSaude {
         this.especialidades.add(esp);
     }
 
-    public int pegaCodigo() {
-        return this.codigo;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void mudaCodigo(int cod) {
-        this.codigo = cod;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getBairro() {
+		return endereço.getBairro();
+	}
+
 
 }

@@ -7,7 +7,6 @@ public class PostoSaude extends UnidadeSaude{
     private float taxaDiariaAtendimentos;
 
     public PostoSaude(String descricao, int at, int taxa) {
-        super(descricao);
         this.atendentes = at;
         this.taxaDiariaAtendimentos = taxa;
     }
