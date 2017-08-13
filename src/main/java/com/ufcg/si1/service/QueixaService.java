@@ -11,7 +11,9 @@ import exceptions.ObjetoInvalidoException;
 import exceptions.QueixaException;
 import exceptions.QueixaInexistenteException;
 import exceptions.QueixaRegistradaException;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface QueixaService {
 
 	Collection<Queixa> findAllQueixas();

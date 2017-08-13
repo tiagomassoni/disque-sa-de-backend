@@ -33,7 +33,7 @@ public class Queixa {
 	@Column
 	private String comentario;
 
-	@Version
+	@Column
     @Temporal(TemporalType.DATE)
     private Date publicacaoData;
 

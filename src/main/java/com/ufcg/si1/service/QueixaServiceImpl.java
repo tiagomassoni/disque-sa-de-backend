@@ -139,6 +139,9 @@ public class QueixaServiceImpl implements QueixaService {
 
     }
 
+    /*
+    Verifica se a queixa está aberta
+     */
     private boolean ehQueixaAberta(Queixa queixa){
         return queixa.getSituacao().status() == STATUS_QUEIXA.ABERTA;
     }

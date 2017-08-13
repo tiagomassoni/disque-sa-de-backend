@@ -3,18 +3,21 @@ package com.ufcg.si1.service;
 import exceptions.ObjetoJaExistenteException;
 import exceptions.Rep;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.model.UnidadeSaude;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface UnidadeSaudeService {
 
 	/**
 	 * 
 	 * @return todas as unidades
 	 */
-	List<UnidadeSaude> getAll();
+	Collection<UnidadeSaude> getAll();
 
 	/**
 	 * Insere uma unidade no repositorio
@@ -27,7 +30,7 @@ public interface UnidadeSaudeService {
 
 	/**
 	 * 
-	 * @param codigo da Unidade buscada
+	 * @param id da Unidade buscada
 	 * @return boolean indicando a existencia ou nao de uma unidade
 	 */
 	boolean existe(Long id);

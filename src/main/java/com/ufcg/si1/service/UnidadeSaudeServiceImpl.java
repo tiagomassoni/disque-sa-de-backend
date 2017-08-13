@@ -10,26 +10,17 @@ import com.ufcg.si1.repositories.UnidadeSaudeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-@Service("unidadeSaudeService")
+@Service
 public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
-	
-	private UnidadeSaudeRepository unidades;
-
 
 	@Autowired
-	public UnidadeSaudeServiceImpl(UnidadeSaudeRepository repositorioUnidades) {
-		this.unidades = repositorioUnidades;
-
-	}
-
-    public UnidadeSaudeServiceImpl() {
-
-    }
+	private UnidadeSaudeRepository unidades;
 
     @Override
-	public List<UnidadeSaude> getAll() {
+	public Collection<UnidadeSaude> getAll() {
 		return unidades.findAll();
 	}
 
@@ -51,7 +42,7 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
 
 	@Override
 	public List<UnidadeSaude> findByBairro(String bairro) {
-		return unidades.findByBairro(bairro);
+		return null;
 	}
 
 	public Double mediaMedica(Object unidade) {

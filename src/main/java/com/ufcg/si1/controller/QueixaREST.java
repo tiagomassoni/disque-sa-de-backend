@@ -9,6 +9,7 @@ import javax.ejb.EJB;
 import exceptions.QueixaException;
 import exceptions.QueixaInexistenteException;
 import exceptions.QueixaRegistradaException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,7 +32,7 @@ import exceptions.ObjetoInvalidoException;
 @CrossOrigin
 public class QueixaREST {
 
-    @EJB
+    @Autowired
     private QueixaService queixaService;
 
     /* situação normal =0
