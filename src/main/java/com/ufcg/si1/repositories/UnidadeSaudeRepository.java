@@ -25,7 +25,7 @@ public interface UnidadeSaudeRepository extends JpaRepository<UnidadeSaude,  Lon
 	 * @param bairro
 	 * @return unidade de saude com bairro especificado
 	 */
-	List<UnidadeSaude> findByBairro(String bairro);
+
 	
 	
 	

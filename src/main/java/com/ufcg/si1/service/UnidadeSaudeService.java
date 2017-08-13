@@ -3,6 +3,7 @@ package com.ufcg.si1.service;
 import exceptions.ObjetoJaExistenteException;
 import exceptions.Rep;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.ufcg.si1.model.Especialidade;
@@ -16,7 +17,7 @@ public interface UnidadeSaudeService {
 	 * 
 	 * @return todas as unidades
 	 */
-	List<UnidadeSaude> getAll();
+	Collection<UnidadeSaude> getAll();
 
 	/**
 	 * Insere uma unidade no repositorio
