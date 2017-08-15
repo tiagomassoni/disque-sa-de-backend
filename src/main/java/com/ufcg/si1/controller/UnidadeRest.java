@@ -1,9 +1,6 @@
 package com.ufcg.si1.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.ejb.EJB;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,19 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ufcg.si1.model.Especialidade;
-import com.ufcg.si1.model.PostoSaude;
 import com.ufcg.si1.model.UnidadeSaude;
 import com.ufcg.si1.service.UnidadeSaudeService;
 import com.ufcg.si1.util.CustomErrorType;
 import com.ufcg.si1.util.ObjWrapper;
 
-import br.edu.ufcg.Hospital;
-import exceptions.ObjetoInexistenteException;
-import exceptions.ObjetoJaExistenteException;
-import exceptions.Rep;
+import com.ufcg.si1.exceptions.ObjetoJaExistenteException;
+import com.ufcg.si1.exceptions.Rep;
 
 @RestController
-@RequestMapping("/unidade")
+@RequestMapping("/api/unidade")
 @CrossOrigin
 public class UnidadeRest {
 

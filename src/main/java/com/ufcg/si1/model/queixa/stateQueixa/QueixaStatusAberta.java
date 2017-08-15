@@ -1,12 +1,8 @@
 package com.ufcg.si1.model.queixa.stateQueixa;
 
-import com.ufcg.si1.model.queixa.Queixa;
-import exceptions.QueixaStatusException;
+import com.ufcg.si1.exceptions.QueixaStatusException;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 /**
  * (STATE)

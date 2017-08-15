@@ -1,8 +1,8 @@
-package exceptions;
+package com.ufcg.si1.exceptions;
 
-public class Rep extends Exception {
+public class ObjetoInvalidoException extends Exception {
 
-	public Rep(String erro) {
+	public ObjetoInvalidoException(String erro) {
 		super("ExcecaoDados: " + erro);
 	}
 }

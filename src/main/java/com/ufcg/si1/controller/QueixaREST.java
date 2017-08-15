@@ -1,14 +1,10 @@
 package com.ufcg.si1.controller;
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.ejb.EJB;
 
 import com.ufcg.si1.controller.prefeitura.Prefeitura;
 import com.ufcg.si1.model.form.QueixaForm;
-import exceptions.QueixaException;
+import com.ufcg.si1.exceptions.QueixaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -4,10 +4,8 @@ import com.ufcg.si1.model.form.QueixaForm;
 import com.ufcg.si1.model.queixa.Queixa;
 import com.ufcg.si1.service.QueixaService;
 import com.ufcg.si1.service.factory.QueixaFactory;
-import exceptions.ObjetoInvalidoException;
-import exceptions.QueixaException;
-import exceptions.QueixaInexistenteException;
-import exceptions.QueixaRegistradaException;
+import com.ufcg.si1.exceptions.QueixaException;
+import com.ufcg.si1.exceptions.QueixaInexistenteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 

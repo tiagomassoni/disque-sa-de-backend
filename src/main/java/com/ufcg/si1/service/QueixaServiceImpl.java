@@ -3,10 +3,9 @@ package com.ufcg.si1.service;
 import com.ufcg.si1.model.queixa.Queixa;
 import com.ufcg.si1.model.queixa.stateQueixa.STATUS_QUEIXA;
 import com.ufcg.si1.repositories.QueixaRepository;
-import exceptions.ObjetoInvalidoException;
-import exceptions.QueixaException;
-import exceptions.QueixaInexistenteException;
-import exceptions.QueixaRegistradaException;
+import com.ufcg.si1.exceptions.QueixaException;
+import com.ufcg.si1.exceptions.QueixaInexistenteException;
+import com.ufcg.si1.exceptions.QueixaRegistradaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -132,6 +131,7 @@ public class QueixaServiceImpl implements QueixaService {
      */
     private boolean ehQueixaUnica(Queixa queixa){
 
+        //Todo: tem que melhorar isso de como encontrar uma queixa.
         Queixa queixaEncontrada = queixaRepository.findByDescricao(queixa.getDescricao());
 
         if(queixaEncontrada != null)

@@ -2,10 +2,7 @@ package com.ufcg.si1.controller.prefeitura;
 
 import com.ufcg.si1.model.form.QueixaForm;
 import com.ufcg.si1.model.queixa.Queixa;
-import exceptions.ObjetoInvalidoException;
-import exceptions.QueixaException;
-import exceptions.QueixaInexistenteException;
-import exceptions.QueixaRegistradaException;
+import com.ufcg.si1.exceptions.QueixaException;
 
 import java.util.Collection;
 

@@ -5,13 +5,11 @@ import com.ufcg.si1.model.Pessoa;
 import com.ufcg.si1.model.queixa.stateQueixa.QueixaState;
 import com.ufcg.si1.model.queixa.stateQueixa.QueixaStatusAberta;
 import com.ufcg.si1.model.queixa.stateQueixa.STATUS_QUEIXA;
-import exceptions.QueixaException;
-import org.springframework.transaction.annotation.Transactional;
+import com.ufcg.si1.exceptions.QueixaException;
 
 import javax.persistence.*;
 
 import java.util.Calendar;
-import java.util.Date;
 
 @Entity
 @Table(name = "QUEIXA_TABLE")

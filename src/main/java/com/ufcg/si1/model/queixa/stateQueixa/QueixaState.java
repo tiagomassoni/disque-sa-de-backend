@@ -1,7 +1,6 @@
 package com.ufcg.si1.model.queixa.stateQueixa;
 
-import com.ufcg.si1.model.queixa.Queixa;
-import exceptions.QueixaStatusException;
+import com.ufcg.si1.exceptions.QueixaStatusException;
 
 import javax.persistence.*;
 

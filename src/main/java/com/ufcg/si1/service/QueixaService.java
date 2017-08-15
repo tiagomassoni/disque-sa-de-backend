@@ -2,15 +2,11 @@ package com.ufcg.si1.service;
 
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import com.ufcg.si1.model.queixa.Queixa;
-import exceptions.ObjetoInvalidoException;
-import exceptions.QueixaException;
-import exceptions.QueixaInexistenteException;
-import exceptions.QueixaRegistradaException;
+import com.ufcg.si1.exceptions.QueixaException;
+import com.ufcg.si1.exceptions.QueixaInexistenteException;
+import com.ufcg.si1.exceptions.QueixaRegistradaException;
 import org.springframework.stereotype.Service;
 
 @Service

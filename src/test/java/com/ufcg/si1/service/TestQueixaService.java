@@ -3,7 +3,7 @@ package com.ufcg.si1.service;
 import com.ufcg.si1.model.Pessoa;
 import com.ufcg.si1.model.queixa.Queixa;
 import com.ufcg.si1.repositories.QueixaRepository;
-import exceptions.QueixaRegistradaException;
+import com.ufcg.si1.exceptions.QueixaRegistradaException;
 import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
 

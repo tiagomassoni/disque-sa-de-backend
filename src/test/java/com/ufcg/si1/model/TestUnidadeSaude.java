@@ -1,12 +1,10 @@
 package com.ufcg.si1.model;
 
-import com.ufcg.si1.model.PostoSaude;
-import com.ufcg.si1.model.UnidadeSaude;
 import com.ufcg.si1.service.UnidadeSaudeService;
 import com.ufcg.si1.service.UnidadeSaudeServiceImpl;
 
-import exceptions.ObjetoJaExistenteException;
-import exceptions.Rep;
+import com.ufcg.si1.exceptions.ObjetoJaExistenteException;
+import com.ufcg.si1.exceptions.Rep;
 
 import java.util.ArrayList;
 import java.util.List;

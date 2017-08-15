@@ -17,8 +17,8 @@ import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.service.EspecialidadeService;
 import com.ufcg.si1.util.CustomErrorType;
 
-import exceptions.ObjetoJaExistenteException;
-import exceptions.Rep;
+import com.ufcg.si1.exceptions.ObjetoJaExistenteException;
+import com.ufcg.si1.exceptions.Rep;
 
 @RestController
 @RequestMapping("/especialidade")
