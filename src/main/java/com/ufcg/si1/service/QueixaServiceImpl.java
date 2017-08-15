@@ -28,7 +28,6 @@ public class QueixaServiceImpl implements QueixaService {
     @Override
     public Queixa findById(Long id) {
         return this.queixaRepository.findById(id);
-
     }
 
     @Override
@@ -121,8 +120,11 @@ public class QueixaServiceImpl implements QueixaService {
     /*
     verifica se a queixa existe no repositorio
      */
-    private boolean existeQueixa(Long id){
+    @Override
+    public boolean existeQueixa(Long id){
+
         return queixaRepository.exists(id);
+
     }
 
     /*
@@ -132,7 +134,10 @@ public class QueixaServiceImpl implements QueixaService {
 
         Queixa queixaEncontrada = queixaRepository.findByDescricao(queixa.getDescricao());
 
-        return !existeQueixa(queixaEncontrada.getId());
+        if(queixaEncontrada != null)
+            return !existeQueixa(queixaEncontrada.getId());
+        else
+            return true;
 
     }
 

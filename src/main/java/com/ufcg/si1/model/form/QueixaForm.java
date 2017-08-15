@@ -34,6 +34,8 @@ public class QueixaForm {
     @Email
     private String cidade;
 
+    private String comentario;
+
 
     public String getDescricao() {
         return descricao;
@@ -84,4 +86,11 @@ public class QueixaForm {
         this.cidade = cidade;
     }
 
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
 }

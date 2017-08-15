@@ -9,8 +9,6 @@ import javax.ejb.EJB;
 import com.ufcg.si1.controller.prefeitura.Prefeitura;
 import com.ufcg.si1.model.form.QueixaForm;
 import exceptions.QueixaException;
-import exceptions.QueixaInexistenteException;
-import exceptions.QueixaRegistradaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ufcg.si1.model.queixa.Queixa;
 import com.ufcg.si1.service.QueixaService;
-import com.ufcg.si1.util.CustomErrorType;
-import com.ufcg.si1.util.ObjWrapper;
 
-import exceptions.ObjetoInvalidoException;
 
 @RestController
 @RequestMapping("/api/queixa")
@@ -54,12 +48,13 @@ public class QueixaREST {
      * 		   caso de sucesso, o recurso requisitado também será
      * 		   enviado.
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ResponseEntity<Collection<Queixa>> listAllUsers() {
-        Collection<Queixa> queixas = queixaService.findAllQueixas();
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<Collection<Queixa>> getAllQueixas() {
+
+        Collection<Queixa> queixas = prefeitura.getTodasAsQueixas();
 
         if (queixas.isEmpty()) {
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity(queixas, HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<Collection<Queixa>>(queixas, HttpStatus.OK);
     }
@@ -98,14 +93,15 @@ public class QueixaREST {
      * 			caso de sucesso o recurso requisitado também será enviado.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> consultarQueixa(@PathVariable("id") long id) {
+    public ResponseEntity<?> consultarQueixa(@PathVariable("id") Long id) {
 
-        Queixa q = queixaService.findById(id);
-        if (q == null) {
-            return new ResponseEntity(new CustomErrorType("Queixa with id " + id
-                    + " not found"), HttpStatus.NOT_FOUND);
+        try{
+            Queixa queixaConsultada = prefeitura.consultarQueixa(id);
+            return new ResponseEntity(queixaConsultada, HttpStatus.OK);
+        } catch (QueixaException e) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Queixa>(q, HttpStatus.OK);
+
     }
 
     /**
@@ -121,20 +117,14 @@ public class QueixaREST {
      * 			caso de sucesso o recurso requisitado também será enviado.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updateQueixa(@PathVariable("id") long id, @RequestBody Queixa queixa) throws QueixaException {
+    public ResponseEntity<Queixa> updateQueixa(@PathVariable("id") Long id, @RequestBody QueixaForm queixa) throws QueixaException {
 
-        Queixa currentQueixa = queixaService.findById(id);
-
-        if (currentQueixa == null) {
-            return new ResponseEntity(new CustomErrorType("Unable to upate. Queixa with id " + id + " not found."),
-                    HttpStatus.NOT_FOUND);
+        try{
+            Queixa queixaAtualizada = prefeitura.updateQueixa(id, queixa);
+            return new ResponseEntity(queixaAtualizada, HttpStatus.OK);
+        }catch (QueixaException e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-        currentQueixa.setDescricao(queixa.getDescricao());
-        currentQueixa.setComentario(queixa.getComentario());
-
-        queixaService.updateQueixa(currentQueixa);
-        return new ResponseEntity<Queixa>(currentQueixa, HttpStatus.OK);
     }
 
     /**
@@ -147,35 +137,28 @@ public class QueixaREST {
      * 		   Response com o sucesso ou não da requisição.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUser(@PathVariable("id") long id) throws QueixaException {
+    public ResponseEntity<Queixa> deleteQueixa(@PathVariable("id") Long id) throws QueixaException {
 
-        Queixa user = queixaService.findById(id);
-        if (user == null) {
-            return new ResponseEntity(new CustomErrorType("Unable to delete. Queixa with id " + id + " not found."),
-                    HttpStatus.NOT_FOUND);
+        try{
+            Queixa queixaApagada = prefeitura.deleteQueixa(id);
+            return new ResponseEntity(queixaApagada,HttpStatus.OK );
+        }catch (QueixaException e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-        queixaService.deleteQueixaById(id);
-        return new ResponseEntity<Queixa>(HttpStatus.NO_CONTENT);
+
     }
 
-    /**
-     * URI do recurso: /queixa/fechamento
-     *
-     * Método de submissão POST para fechar uma Queixa específica.
-     * @param queixaAFechar
-     * 		 	Queixa a ser fechada.
-     * @return
-     * 			Response com o sucesso ou não da requisição.
-     */
-    //TODO: não tá passando o comentário da queixa
-    @RequestMapping(value = "/fechamento", method = RequestMethod.POST)
-    public ResponseEntity<?> fecharQueixa(@RequestBody Queixa queixaAFechar) throws QueixaException {
-        try {
-            queixaService.fecharQueixa(queixaAFechar.getId(), " ");
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+     //TODO: DOCs, não tá passando o comentário da queixa,
+    @RequestMapping(value = "/fechamento/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<?> fecharQueixa(@PathVariable Long id, @RequestBody String comentario) throws QueixaException {
+
+        try{
+            Queixa queixaFechada = prefeitura.fecharQueixa(id, comentario);
+            return new ResponseEntity(queixaFechada, HttpStatus.OK);
+        } catch (QueixaException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Queixa>(queixaAFechar, HttpStatus.OK);
+
     }
+
 }
