@@ -99,7 +99,7 @@ public class QueixaREST {
             Queixa queixaConsultada = prefeitura.consultarQueixa(id);
             return new ResponseEntity(queixaConsultada, HttpStatus.OK);
         } catch (QueixaException e) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         }
 
     }
