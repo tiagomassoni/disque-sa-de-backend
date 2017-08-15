@@ -20,8 +20,6 @@ public class QueixaServiceImpl implements QueixaService {
     @Autowired
     private QueixaRepository queixaRepository;
 
-
-
     @Override
     public Collection<Queixa> findAllQueixas() {
         return this.queixaRepository.findAll();
@@ -41,7 +39,6 @@ public class QueixaServiceImpl implements QueixaService {
         }else{
             throw new QueixaInexistenteException();
         }
-
 
     }
 
@@ -70,12 +67,10 @@ public class QueixaServiceImpl implements QueixaService {
     public Queixa abrirQueixa(Queixa queixa) throws QueixaRegistradaException {
 
         if( ehQueixaUnica(queixa)){
-
             return queixaRepository.save(queixa);
         }else{
             throw new QueixaRegistradaException();
         }
-
 
     }
 
@@ -135,7 +130,9 @@ public class QueixaServiceImpl implements QueixaService {
      */
     private boolean ehQueixaUnica(Queixa queixa){
 
-        return queixaRepository.findByIdAndDescricao(queixa.getId(), queixa.getDescricao()) == null;
+        Queixa queixaEncontrada = queixaRepository.findByDescricao(queixa.getDescricao());
+
+        return !existeQueixa(queixaEncontrada.getId());
 
     }
 

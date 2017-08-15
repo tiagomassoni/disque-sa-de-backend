@@ -1,13 +1,16 @@
 package com.ufcg.si1.model.queixa;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ufcg.si1.model.Pessoa;
 import com.ufcg.si1.model.queixa.stateQueixa.QueixaState;
 import com.ufcg.si1.model.queixa.stateQueixa.QueixaStatusAberta;
 import com.ufcg.si1.model.queixa.stateQueixa.STATUS_QUEIXA;
 import exceptions.QueixaException;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity
@@ -15,19 +18,21 @@ import java.util.Date;
 public class Queixa {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, unique = true)
 	private Long id;
 
 	@Column(name = "descricao")
 	private String descricao;
 
-	@ManyToOne
+
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(nullable = false)
 	private Pessoa solicitante;
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(nullable = false)
+    @JsonIgnore
 	public QueixaState situacao;
 
 	@Column
@@ -35,7 +40,7 @@ public class Queixa {
 
 	@Column
     @Temporal(TemporalType.DATE)
-    private Date publicacaoData;
+    private Calendar publicacaoData;
 
 
 	public Queixa(String descricao, int situacao, String comentario,
@@ -49,13 +54,15 @@ public class Queixa {
 
 	//FIXME: eu não sei deveria ter esse construtor aqui, acho mais elegante e pode ser usado
 	//em alguma parte do código
-	public Queixa(long id, String descricao, Pessoa solicitante) {
+	public Queixa(String descricao, Pessoa solicitante) {
 
 		//FIXME: esse id passado por parametro tá muito feio
 
-		this.id = id;
 		this.descricao = descricao;
 		this.solicitante = solicitante;
+		this.situacao = new QueixaStatusAberta();
+		this.comentario = "";
+		this.publicacaoData = Calendar.getInstance();
 	}
 
 
@@ -72,11 +79,11 @@ public class Queixa {
 
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -151,4 +158,11 @@ public class Queixa {
 	//JPA
     public Queixa(){}
 
+    public Calendar getPublicacaoData() {
+        return publicacaoData;
+    }
+
+    public void setPublicacaoData(Calendar publicacaoData) {
+        this.publicacaoData = publicacaoData;
+    }
 }

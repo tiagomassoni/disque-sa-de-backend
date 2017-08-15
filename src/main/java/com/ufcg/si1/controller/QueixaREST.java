@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.ejb.EJB;
 
+import com.ufcg.si1.controller.prefeitura.Prefeitura;
+import com.ufcg.si1.model.form.QueixaForm;
 import exceptions.QueixaException;
 import exceptions.QueixaInexistenteException;
 import exceptions.QueixaRegistradaException;
@@ -34,6 +36,9 @@ public class QueixaREST {
 
     @Autowired
     private QueixaService queixaService;
+
+    @Autowired
+    private Prefeitura prefeitura;
 
     /* situação normal =0
         situação extra =1
@@ -65,21 +70,23 @@ public class QueixaREST {
      * Método de submissão POST para cadastrar uma nova queixa.
      * @param queixa
      * 				Queixa a ser cadastrada
-     * @param ucBuilder
-     * 					????????????????????????
+     *
      * @return
      * 			Response com o sucesso ou não da requisição
      */
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<?> abrirQueixa(@RequestBody Queixa queixa, UriComponentsBuilder ucBuilder) throws QueixaException {
-        try {
-            queixa.abrir();
-        } catch (Exception e) {
-            return new ResponseEntity<List>(HttpStatus.BAD_REQUEST);
-        }
-        queixaService.abrirQueixa(queixa);
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<Queixa> abrirQueixa(@RequestBody QueixaForm queixa) throws QueixaException {
 
-        return new ResponseEntity<Queixa>(queixa, HttpStatus.CREATED);
+        ResponseEntity response;
+
+        try {
+            Queixa queixaAberta = prefeitura.abrirQueixa(queixa);
+            return new ResponseEntity<Queixa>(queixaAberta, HttpStatus.CREATED);
+        } catch (QueixaException e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+
     }
 
     /** URI do recurso: /queixa/{id}
