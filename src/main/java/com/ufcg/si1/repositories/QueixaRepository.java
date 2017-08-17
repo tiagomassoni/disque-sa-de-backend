@@ -1,8 +1,10 @@
 package com.ufcg.si1.repositories;
 
+import com.ufcg.si1.model.Pessoa;
 import com.ufcg.si1.model.queixa.Queixa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
@@ -14,7 +16,10 @@ public interface QueixaRepository extends JpaRepository<Queixa,  Long> {
 
     Queixa findById(Long id);
 
-    Queixa findByIdAndDescricao(Long id, String descricao);
+    @Transactional
+    Queixa findBySolicitanteAndDescricao(Pessoa pessoa, String descricao);
+
+    Queixa findByDescricao(String descricao);
 
 
 }

@@ -2,15 +2,11 @@ package com.ufcg.si1.service;
 
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import com.ufcg.si1.model.queixa.Queixa;
-import exceptions.ObjetoInvalidoException;
-import exceptions.QueixaException;
-import exceptions.QueixaInexistenteException;
-import exceptions.QueixaRegistradaException;
+import com.ufcg.si1.exceptions.QueixaException;
+import com.ufcg.si1.exceptions.QueixaInexistenteException;
+import com.ufcg.si1.exceptions.QueixaRegistradaException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -57,7 +53,7 @@ public interface QueixaService {
      * @param id - id da queixa
      * @param comentario - comentário sobre o desenrolar do processo da queixa
      */
-    Queixa fecharQueixa(Long id, String comentario) throws ObjetoInvalidoException, QueixaInexistenteException, QueixaException;
+    Queixa fecharQueixa(Long id, String comentario) throws QueixaException;
 
-	
+	boolean existeQueixa(Long id);
 }

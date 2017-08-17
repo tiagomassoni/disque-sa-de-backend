@@ -1,7 +1,7 @@
 package com.ufcg.si1.service;
 
-import exceptions.ObjetoJaExistenteException;
-import exceptions.Rep;
+import com.ufcg.si1.exceptions.ObjetoJaExistenteException;
+import com.ufcg.si1.exceptions.Rep;
 
 import java.util.Collection;
 import java.util.List;

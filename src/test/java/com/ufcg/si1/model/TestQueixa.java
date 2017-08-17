@@ -3,9 +3,7 @@ package com.ufcg.si1.model;
 import com.ufcg.si1.model.queixa.Queixa;
 import com.ufcg.si1.model.queixa.stateQueixa.STATUS_QUEIXA;
 
-import exceptions.ObjetoInvalidoException;
-
-import exceptions.QueixaException;
+import com.ufcg.si1.exceptions.QueixaException;
 import org.junit.*;
 
 /**

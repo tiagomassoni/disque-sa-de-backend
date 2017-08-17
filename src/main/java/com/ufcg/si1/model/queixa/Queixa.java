@@ -1,44 +1,56 @@
 package com.ufcg.si1.model.queixa;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ufcg.si1.model.Pessoa;
 import com.ufcg.si1.model.queixa.stateQueixa.QueixaState;
 import com.ufcg.si1.model.queixa.stateQueixa.QueixaStatusAberta;
 import com.ufcg.si1.model.queixa.stateQueixa.STATUS_QUEIXA;
-import exceptions.QueixaException;
+import com.ufcg.si1.exceptions.QueixaException;
 
 import javax.persistence.*;
 
-import java.util.Date;
+import java.util.Calendar;
 
 @Entity
 @Table(name = "QUEIXA_TABLE")
 public class Queixa {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, unique = true)
 	private Long id;
 
 	@Column(name = "descricao")
 	private String descricao;
 
-	@ManyToOne
+
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(nullable = false)
 	private Pessoa solicitante;
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(nullable = false)
+    @JsonIgnore
 	public QueixaState situacao;
 
 	@Column
 	private String comentario;
 
+
+    @Column
+    @Enumerated(EnumType.STRING)
+	private STATUS_QUEIXA status;
+
 	@Column
     @Temporal(TemporalType.DATE)
-    private Date publicacaoData;
+    private Calendar publicacaoData;
+
+    //JPA
+    public Queixa(){}
 
 
-	public Queixa(String descricao, int situacao, String comentario,
+
+    public Queixa(String descricao, int situacao, String comentario,
 				  Pessoa socilitante) {
 
 		this.descricao = descricao;
@@ -49,34 +61,39 @@ public class Queixa {
 
 	//FIXME: eu não sei deveria ter esse construtor aqui, acho mais elegante e pode ser usado
 	//em alguma parte do código
-	public Queixa(long id, String descricao, Pessoa solicitante) {
+	public Queixa(String descricao, Pessoa solicitante) {
 
 		//FIXME: esse id passado por parametro tá muito feio
 
-		this.id = id;
 		this.descricao = descricao;
 		this.solicitante = solicitante;
+		this.situacao = new QueixaStatusAberta();
+		this.comentario = "";
+		this.publicacaoData = Calendar.getInstance();
+		this.status = this.situacao.status();
 	}
 
 
 
 	public void abrir() throws QueixaException {
 
-		this.situacao.abrir();
+		this.situacao = this.situacao.abrir();
+		this.status = this.situacao.status();
 	}
 
 	public void fechar(String coment) throws QueixaException {
 
 	    this.comentario = coment;
-	    this.situacao.fechar();
+	    this.situacao = this.situacao.fechar();
+        this.status = this.situacao.status();
 
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -112,29 +129,28 @@ public class Queixa {
 		this.solicitante = solicitante;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		return result;
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Queixa other = (Queixa) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
+	//TODO: REFATORAR EQUALS E HASHCODE
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	private STATUS_QUEIXA verificaQueixa(int situacao){
+        Queixa queixa = (Queixa) o;
+
+        if (descricao != null ? !descricao.equals(queixa.descricao) : queixa.descricao != null) return false;
+        return solicitante != null ? solicitante.equals(queixa.solicitante) : queixa.solicitante == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = descricao != null ? descricao.hashCode() : 0;
+        result = 31 * result + (solicitante != null ? solicitante.hashCode() : 0);
+        return result;
+    }
+
+    //TODO: Código morto
+    private STATUS_QUEIXA verificaQueixa(int situacao){
 
 		STATUS_QUEIXA status;
 		if(situacao == 1){
@@ -146,9 +162,26 @@ public class Queixa {
 		}
 		return status;
 
+
 	}
 
-	//JPA
-    public Queixa(){}
+
+    public STATUS_QUEIXA getStatus() {
+        return status;
+    }
+
+    public void setStatus(STATUS_QUEIXA status) {
+        this.status = status;
+    }
+
+    public Calendar getPublicacaoData() {
+        return publicacaoData;
+    }
+
+    public void setPublicacaoData(Calendar publicacaoData) {
+        this.publicacaoData = publicacaoData;
+    }
+
+
 
 }

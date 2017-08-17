@@ -3,10 +3,9 @@ package com.ufcg.si1.service;
 import com.ufcg.si1.model.queixa.Queixa;
 import com.ufcg.si1.model.queixa.stateQueixa.STATUS_QUEIXA;
 import com.ufcg.si1.repositories.QueixaRepository;
-import exceptions.ObjetoInvalidoException;
-import exceptions.QueixaException;
-import exceptions.QueixaInexistenteException;
-import exceptions.QueixaRegistradaException;
+import com.ufcg.si1.exceptions.QueixaException;
+import com.ufcg.si1.exceptions.QueixaInexistenteException;
+import com.ufcg.si1.exceptions.QueixaRegistradaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +19,6 @@ public class QueixaServiceImpl implements QueixaService {
     @Autowired
     private QueixaRepository queixaRepository;
 
-
-
     @Override
     public Collection<Queixa> findAllQueixas() {
         return this.queixaRepository.findAll();
@@ -30,7 +27,6 @@ public class QueixaServiceImpl implements QueixaService {
     @Override
     public Queixa findById(Long id) {
         return this.queixaRepository.findById(id);
-
     }
 
     @Override
@@ -41,7 +37,6 @@ public class QueixaServiceImpl implements QueixaService {
         }else{
             throw new QueixaInexistenteException();
         }
-
 
     }
 
@@ -70,12 +65,10 @@ public class QueixaServiceImpl implements QueixaService {
     public Queixa abrirQueixa(Queixa queixa) throws QueixaRegistradaException {
 
         if( ehQueixaUnica(queixa)){
-
             return queixaRepository.save(queixa);
         }else{
             throw new QueixaRegistradaException();
         }
-
 
     }
 
@@ -126,8 +119,11 @@ public class QueixaServiceImpl implements QueixaService {
     /*
     verifica se a queixa existe no repositorio
      */
-    private boolean existeQueixa(Long id){
+    @Override
+    public boolean existeQueixa(Long id){
+
         return queixaRepository.exists(id);
+
     }
 
     /*
@@ -135,7 +131,13 @@ public class QueixaServiceImpl implements QueixaService {
      */
     private boolean ehQueixaUnica(Queixa queixa){
 
-        return queixaRepository.findByIdAndDescricao(queixa.getId(), queixa.getDescricao()) == null;
+        //Todo: tem que melhorar isso de como encontrar uma queixa.
+        Queixa queixaEncontrada = queixaRepository.findByDescricao(queixa.getDescricao());
+
+        if(queixaEncontrada != null)
+            return !existeQueixa(queixaEncontrada.getId());
+        else
+            return true;
 
     }
 
