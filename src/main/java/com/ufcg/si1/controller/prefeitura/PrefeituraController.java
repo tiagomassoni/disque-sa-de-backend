@@ -1,5 +1,6 @@
 package com.ufcg.si1.controller.prefeitura;
 
+import com.ufcg.si1.exceptions.QueixaNotEqualsException;
 import com.ufcg.si1.model.form.QueixaForm;
 import com.ufcg.si1.model.queixa.Queixa;
 import com.ufcg.si1.service.QueixaService;
@@ -50,13 +51,26 @@ public class PrefeituraController implements Prefeitura {
     public Queixa updateQueixa(Long id, QueixaForm queixa) throws QueixaException {
 
         if(queixaService.existeQueixa(id)){
-            Queixa queixaCriada = queixaService.findById(id);
-            queixaCriada.setComentario(queixa.getComentario());
-            queixaCriada.setDescricao(queixa.getDescricao());
-            return queixaService.updateQueixa(queixaCriada);
+            Queixa queixaAtualizada = verificaEAtualizaQueixa(id, queixa);
+            return queixaService.updateQueixa(queixaAtualizada);
         }else{
             throw new QueixaInexistenteException();
         }
+    }
+
+    private Queixa verificaEAtualizaQueixa(Long id, QueixaForm queixaForm) throws QueixaException {
+
+        Queixa queixa = queixaService.findById(id);
+        Queixa queixaCriada = QueixaFactory.createQueixa(queixaForm);
+
+        if(queixaCriada.equals(queixa)){
+            queixa.setDescricao(queixaCriada.getDescricao());
+            queixa.setComentario(queixaCriada.getComentario());
+        }else {
+            throw new QueixaNotEqualsException();
+        }
+
+        return queixa;
 
     }
 

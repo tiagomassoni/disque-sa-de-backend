@@ -117,29 +117,27 @@ public class Queixa {
 		this.solicitante = solicitante;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		return result;
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Queixa other = (Queixa) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
+	//TODO: REFATORAR EQUALS E HASHCODE
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	private STATUS_QUEIXA verificaQueixa(int situacao){
+        Queixa queixa = (Queixa) o;
+
+        if (descricao != null ? !descricao.equals(queixa.descricao) : queixa.descricao != null) return false;
+        return solicitante != null ? solicitante.equals(queixa.solicitante) : queixa.solicitante == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = descricao != null ? descricao.hashCode() : 0;
+        result = 31 * result + (solicitante != null ? solicitante.hashCode() : 0);
+        return result;
+    }
+
+    private STATUS_QUEIXA verificaQueixa(int situacao){
 
 		STATUS_QUEIXA status;
 		if(situacao == 1){
@@ -163,4 +161,7 @@ public class Queixa {
     public void setPublicacaoData(Calendar publicacaoData) {
         this.publicacaoData = publicacaoData;
     }
+
+
+
 }
