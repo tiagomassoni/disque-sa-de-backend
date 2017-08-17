@@ -36,12 +36,21 @@ public class Queixa {
 	@Column
 	private String comentario;
 
+
+    @Column
+    @Enumerated(EnumType.STRING)
+	private STATUS_QUEIXA status;
+
 	@Column
     @Temporal(TemporalType.DATE)
     private Calendar publicacaoData;
 
+    //JPA
+    public Queixa(){}
 
-	public Queixa(String descricao, int situacao, String comentario,
+
+
+    public Queixa(String descricao, int situacao, String comentario,
 				  Pessoa socilitante) {
 
 		this.descricao = descricao;
@@ -61,19 +70,22 @@ public class Queixa {
 		this.situacao = new QueixaStatusAberta();
 		this.comentario = "";
 		this.publicacaoData = Calendar.getInstance();
+		this.status = this.situacao.status();
 	}
 
 
 
 	public void abrir() throws QueixaException {
 
-		this.situacao.abrir();
+		this.situacao = this.situacao.abrir();
+		this.status = this.situacao.status();
 	}
 
 	public void fechar(String coment) throws QueixaException {
 
 	    this.comentario = coment;
-	    this.situacao.fechar();
+	    this.situacao = this.situacao.fechar();
+        this.status = this.situacao.status();
 
 	}
 
@@ -137,6 +149,7 @@ public class Queixa {
         return result;
     }
 
+    //TODO: Código morto
     private STATUS_QUEIXA verificaQueixa(int situacao){
 
 		STATUS_QUEIXA status;
@@ -149,10 +162,17 @@ public class Queixa {
 		}
 		return status;
 
+
 	}
 
-	//JPA
-    public Queixa(){}
+
+    public STATUS_QUEIXA getStatus() {
+        return status;
+    }
+
+    public void setStatus(STATUS_QUEIXA status) {
+        this.status = status;
+    }
 
     public Calendar getPublicacaoData() {
         return publicacaoData;

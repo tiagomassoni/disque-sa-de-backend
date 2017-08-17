@@ -3,6 +3,7 @@ package com.ufcg.si1.model.queixa.stateQueixa;
 import com.ufcg.si1.model.queixa.Queixa;
 import com.ufcg.si1.exceptions.QueixaStatusException;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,13 +13,9 @@ import javax.persistence.Id;
  * Esta classe representa um dos estados da queixa.
  * Created by sampaio on 11/08/17.
  */
+@Entity
 public class QueixaStatusFechada extends QueixaState {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    private Queixa queixaRelacionada;
 
     @Override
     public QueixaState abrir() throws QueixaStatusException {
