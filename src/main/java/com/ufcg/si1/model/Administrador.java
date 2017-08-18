@@ -25,7 +25,6 @@ public class Administrador {
     private String email;
 
     @Column
-    @JsonIgnore
     private String password;
 
     public String getNome() {

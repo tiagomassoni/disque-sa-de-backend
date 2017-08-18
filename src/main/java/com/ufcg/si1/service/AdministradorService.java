@@ -3,11 +3,15 @@ package com.ufcg.si1.service;
 import com.ufcg.si1.exceptions.AdministradorException;
 import com.ufcg.si1.exceptions.AdministradorInexistenteException;
 import com.ufcg.si1.model.Administrador;
+import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 /**
  * Created by sampaio on 17/08/17.
  */
-public interface AdminstradorService {
+@Service
+public interface AdministradorService {
 
     /**
      * Realiza o login verificando se o Adminstrador passado como parâmetro está no sistema
@@ -31,5 +35,5 @@ public interface AdminstradorService {
     Administrador atualizaAdministrador (Administrador adm) throws AdministradorException;
 
 
-
+    Collection<Administrador> getAllAdministrador();
 }
