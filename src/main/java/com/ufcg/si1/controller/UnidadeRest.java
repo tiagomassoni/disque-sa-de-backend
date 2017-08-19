@@ -1,9 +1,9 @@
 package com.ufcg.si1.controller;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.model.UnidadeSaude;
@@ -62,16 +61,16 @@ public class UnidadeRest {
 	 * 		   caso de sucesso, o recurso requisitado também será
 	 * 		   enviado.
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ResponseEntity<?> getAllUnidades() {
+	@RequestMapping(value = "/todasAsUnidades", method = RequestMethod.GET)
+	public ResponseEntity<Collection<UnidadeSaude>> getAllUnidades() {
 
 
-		List<UnidadeSaude> todasUnidades = (List)unidadeSaudeService.getAll();
+		Collection<UnidadeSaude> todasUnidades = unidadeSaudeService.getAll();
 
 		if (!todasUnidades.isEmpty()) {
-			return new ResponseEntity<>(todasUnidades, HttpStatus.OK);
+			return new ResponseEntity<Collection<UnidadeSaude>>(todasUnidades, HttpStatus.OK);
 		}
-		return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Collection<UnidadeSaude>>(HttpStatus.NOT_FOUND);
 	}
 
 	/**
@@ -83,20 +82,18 @@ public class UnidadeRest {
 	 * @param ucBuilder
 	 * @return
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public ResponseEntity<String> incluirUnidadeSaude(@RequestBody UnidadeSaude us, UriComponentsBuilder ucBuilder) {
-
+	@RequestMapping(value = "/incluirUnidade", method = RequestMethod.POST)
+	public ResponseEntity<UnidadeSaude> incluirUnidadeSaude(@RequestBody UnidadeSaude us) {
+				
 		try {
 			unidadeSaudeService.insere(us);
+			 return new ResponseEntity<UnidadeSaude>(HttpStatus.CREATED);
 		} catch (Rep e) {
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<UnidadeSaude>(HttpStatus.BAD_REQUEST);
 		} catch (ObjetoJaExistenteException e) {
-			return new ResponseEntity<String>(HttpStatus.CONFLICT);
+			return new ResponseEntity<UnidadeSaude>(HttpStatus.CONFLICT);
 		}
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/api/unidade/{id}").buildAndExpand(us.getId()).toUri());
-		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	}
 
 	/**

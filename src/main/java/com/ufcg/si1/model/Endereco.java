@@ -2,14 +2,13 @@ package com.ufcg.si1.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 
 @Entity
 public class Endereco {
 
-    @Id
-    @Column
     private Long id;
 
 	private String rua;
@@ -17,16 +16,6 @@ public class Endereco {
 	private String uf;
 
 	private String cidade;
-	
-	private String bairro;
-
-	@OneToOne
-    private UnidadeSaude unidade;
-
-	//jpa
-	public Endereco(){
-
-	}
 
 	public Endereco(String rua, String uf, String cidade) {
 		this.rua = rua;
@@ -34,26 +23,36 @@ public class Endereco {
 		this.cidade = cidade;
 	}
 
+    @Column(name = "rua", updatable = false)
 	public String getRua() {
 		return this.rua;
 	}
 
+    @Column(name = "uf", updatable = false)
 	public String getUf() {
 		return this.uf;
 	}
 
+    @Column(name = "cidade", updatable = false)
 	public String getCidade() {
 		return this.cidade;
 	}
 
-	public String getBairro() {
-		return bairro;
+    public void setRua(String rua) {
+		this.rua = rua;
 	}
 
-	public void setBairro(String bairro) {
-		this.bairro = bairro;
+	public void setUf(String uf) {
+		this.uf = uf;
 	}
 
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
+
+	@Id 
+    @GeneratedValue(strategy=GenerationType.AUTO) 
+    @Column(name = "id", updatable = false)    
     public Long getId() {
         return id;
     }
@@ -62,11 +61,4 @@ public class Endereco {
         this.id = id;
     }
 
-    public UnidadeSaude getUnidade() {
-        return unidade;
-    }
-
-    public void setUnidade(UnidadeSaude unidade) {
-        this.unidade = unidade;
-    }
 }
