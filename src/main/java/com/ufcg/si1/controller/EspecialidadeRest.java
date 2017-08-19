@@ -29,7 +29,7 @@ public class EspecialidadeRest {
 	private EspecialidadeService especialidadeService;
 	
 	@RequestMapping(value = "/especialidade/", method = RequestMethod.POST)
-    public ResponseEntity<String> incluirEspecialidade(@RequestBody Especialidade esp, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<String> incluirEspecialidade(@RequestBody Especialidade esp, UriComponentsBuilder ucBuilder) throws Exception {
         try {
             especialidadeService.insere(esp);
         } catch (Rep e) {

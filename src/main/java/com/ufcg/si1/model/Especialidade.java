@@ -10,9 +10,6 @@ public class Especialidade {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
-    private UnidadeSaude unidadeSaude;
-
     @Column
     private int codigo;
 
@@ -20,7 +17,7 @@ public class Especialidade {
     private String descricao;
 
     public Especialidade(String descricao) {
-        this.codigo = 0; // gerado no repositorio
+        this.codigo = 0;
         this.descricao = descricao;
     }
 
@@ -44,11 +41,4 @@ public class Especialidade {
         this.codigo = cod;
     }
 
-    public UnidadeSaude getUnidadeSaude() {
-        return unidadeSaude;
-    }
-
-    public void setUnidadeSaude(UnidadeSaude unidadeSaude) {
-        this.unidadeSaude = unidadeSaude;
-    }
 }

@@ -9,20 +9,18 @@ import java.util.List;
 
 
 public interface EspecialidadeService {
+	
     Especialidade procura(int codigo) throws Rep,
             ObjetoInexistenteException;
 
-    List getListaEspecialidade()
+    List<Especialidade> getListaEspecialidade()
                     throws Rep, ObjetoInexistenteException;
 
-    int size();
-
-    Especialidade getElemento(int posicao);
-
     void insere(Especialidade esp)throws Rep,
-            ObjetoJaExistenteException;
+            ObjetoJaExistenteException, Exception;
 
     boolean existe(int codigo);
 
-    Especialidade findById(long id);
+	Especialidade findById(long id);
+
 }
