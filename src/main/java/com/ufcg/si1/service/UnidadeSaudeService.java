@@ -41,7 +41,7 @@ public interface UnidadeSaudeService {
 	 * @return Unidade que possude id especificado
 	 * 
 	 */
-	UnidadeSaude findById(long id);
+	UnidadeSaude findById(long Id);
 
 	/**
 	 * 

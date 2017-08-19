@@ -9,7 +9,6 @@ import com.ufcg.si1.repositories.UnidadeSaudeRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,6 +17,10 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
 
 	@Autowired
 	private UnidadeSaudeRepository unidades;
+	
+	public  UnidadeSaudeServiceImpl(UnidadeSaudeRepository rep) {
+		this.unidades = rep;
+	}
 
     @Override
 	public Collection<UnidadeSaude> getAll() {
@@ -32,8 +35,8 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
 	}
 
 	@Override
-	public boolean existe(Long id) {
-		return unidades.findById(id) != null;
+	public boolean existe(Long Id) {
+		return unidades.findById(Id) != null;
 	}
 
 	public UnidadeSaude findById(long id) {
@@ -42,13 +45,13 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
 
 	@Override
 	public List<UnidadeSaude> findByBairro(String bairro) {
-		return null;
+		return unidades.findByBairro(bairro);
 	}
 
 	public Double mediaMedica(Object unidade) {
 		double c = 0.0;
 		if (unidade instanceof PostoSaude)
-			c = ((PostoSaude) unidade).getAtendentes() / ((PostoSaude) unidade).taxaDiaria();
+			c = ((PostoSaude) unidade).getAtendentes() / ((PostoSaude) unidade).getTaxaDiariaAtendimentos();
 		else if (unidade instanceof Hospital) {
 			c = ((Hospital) unidade).getNumeroMedicos() / ((Hospital) unidade).getNumeroPacientesDia();
 		}

@@ -62,7 +62,7 @@ public class UnidadeRest {
 	 * 		   caso de sucesso, o recurso requisitado também será
 	 * 		   enviado.
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "/todasUnidades", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllUnidades() {
 
 
@@ -83,20 +83,18 @@ public class UnidadeRest {
 	 * @param ucBuilder
 	 * @return
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public ResponseEntity<String> incluirUnidadeSaude(@RequestBody UnidadeSaude us, UriComponentsBuilder ucBuilder) {
-
+	@RequestMapping(value = "/incluirUnidade", method = RequestMethod.POST)
+	public ResponseEntity<String> incluirUnidadeSaude(@RequestBody UnidadeSaude us) {
+				
 		try {
 			unidadeSaudeService.insere(us);
+			 return new ResponseEntity<String>(HttpStatus.CREATED);
 		} catch (Rep e) {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		} catch (ObjetoJaExistenteException e) {
 			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/api/unidade/{id}").buildAndExpand(us.getId()).toUri());
-		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	}
 
 	/**
