@@ -10,14 +10,33 @@ public class Especialidade {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
+    @Column(name="codigo", updatable=false)
     private int codigo;
 
-    @Column
+    @Column(name="descricao", updatable=false)
     private String descricao;
+    
+    @Column(name="idUs", updatable=false)
+    private Long idUs;
 
-    public Especialidade(String descricao) {
-        this.codigo = 0;
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getIdUs() {
+		return idUs;
+	}
+
+	public void setIdUs(Long idUs) {
+		this.idUs = idUs;
+	}
+
+	public Especialidade(int codigo, String descricao) {
+        this.codigo = codigo;
         this.descricao = descricao;
     }
 

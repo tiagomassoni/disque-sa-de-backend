@@ -3,49 +3,54 @@ package com.ufcg.si1.service;
 import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.repositories.EspecialidadeRepository;
 import com.ufcg.si1.exceptions.ObjetoInexistenteException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("especialidadeService")
 public class EspecialidadeServiceImpl implements EspecialidadeService {
 
+	@Autowired
 	private EspecialidadeRepository especialidadeRepository;
 
-    @Override
-    public Especialidade procura(int codigo) throws ObjetoInexistenteException {
-    	if (existe(codigo)) {
-    		return especialidadeRepository.findBycodigo(codigo);
-    	}
-       
-    	throw new ObjetoInexistenteException("Especialidade nao encontrada");
-    }
-
+	//Este método ainda nao faz sentido pra atual implementação,
+	//mas pode fazer caso a estratégia mude
     @Override
     public List<Especialidade> getListaEspecialidade() {
     	return especialidadeRepository.findAll();
     }
 
     @Override
-    public void insere(Especialidade esp) throws Exception {
-    	if(especialidadeRepository.findBycodigo(esp.getCodigo()) != null) {
-    		throw new Exception();
-    	} else {
-    		especialidadeRepository.save(esp);
-    	}
+    public void insere(Especialidade esp){
+    	especialidadeRepository.save(esp);
     }
 
+    //Assim como esse também nao
     @Override
     public boolean existe(int codigo) {
-
-        if(especialidadeRepository.findBycodigo(codigo) != null) {
+        if(especialidadeRepository.findByCodigo(codigo) != null) {
         	return true;
         } return false;
     }
 
 	@Override
 	public Especialidade findById(long id) {
-		return especialidadeRepository.findByid(id);
+		return especialidadeRepository.findById(id);
+	}
+
+	@Override
+	public List<Long> unidadesComEsecialidade(int codigo) {
+		List<Especialidade> esp = especialidadeRepository.findByCodigo(codigo);
+		List<Long> idUnidades = new ArrayList<>();
+		
+		for (Especialidade especialidade: esp) {
+			idUnidades.add(especialidade.getIdUs());
+		}
+		
+		return idUnidades;
 	}
 
 
