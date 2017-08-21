@@ -105,7 +105,7 @@ public class UnidadeRest {
 	 * 		   caso de sucesso, o recurso requisitado também será
 	 * 		   enviado.
 	 */
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/consultaUnidade/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> consultarUnidadeSaude(@PathVariable("id") long id) {
 
 		UnidadeSaude us = unidadeSaudeService.findById(id);
@@ -126,7 +126,7 @@ public class UnidadeRest {
 	 * 		   caso de sucesso, o recurso requisitado também será
 	 * 		   enviado.
 	 */
-	@RequestMapping(value="/busca", method= RequestMethod.GET)
+	@RequestMapping(value="/buscaPorBairro", method= RequestMethod.GET)
 	public ResponseEntity<?> consultarUnidadeSaudePorBairro(@RequestParam(value = "bairro", required = true) String bairro){
 
 		List<UnidadeSaude> unidadesDoBairro = unidadeSaudeService.findByBairro(bairro);

@@ -1,8 +1,7 @@
 package com.ufcg.si1.service;
 
-import br.edu.ufcg.Hospital;
-
 import com.ufcg.si1.model.Especialidade;
+import com.ufcg.si1.model.HospitalAdapter;
 import com.ufcg.si1.model.PostoSaude;
 import com.ufcg.si1.model.UnidadeSaude;
 import com.ufcg.si1.repositories.UnidadeSaudeRepository;
@@ -48,12 +47,12 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
 		return unidades.findByBairro(bairro);
 	}
 
-	public Double mediaMedica(Object unidade) {
+	public Double mediaMedica(UnidadeSaude unidade) {
 		double c = 0.0;
 		if (unidade instanceof PostoSaude)
 			c = ((PostoSaude) unidade).getAtendentes() / ((PostoSaude) unidade).getTaxaDiariaAtendimentos();
-		else if (unidade instanceof Hospital) {
-			c = ((Hospital) unidade).getNumeroMedicos() / ((Hospital) unidade).getNumeroPacientesDia();
+		else if (unidade instanceof HospitalAdapter) {
+			c = ((HospitalAdapter) unidade).getNumeroMedicos() / ((HospitalAdapter) unidade).getNumeroPacientesDia();
 		}
 		return c;
 	}
@@ -61,6 +60,7 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
 	public List<Especialidade> especialidadesPorUnidade(Long id) {
 		return findById(id).getEspecialidades();
 	}
+
 
 
 }
