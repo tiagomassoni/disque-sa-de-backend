@@ -34,7 +34,7 @@ public class EspecialidadeRest {
 	@RequestMapping(value = "/insere", method = RequestMethod.POST)
     public ResponseEntity<Especialidade> incluirEspecialidade(@RequestBody Especialidade esp) throws Exception {
         try {
-        	System.out.println(esp);
+
             especialidadeService.insere(esp);
             	
         } catch (Exception e) {
@@ -43,21 +43,9 @@ public class EspecialidadeRest {
        return new ResponseEntity<Especialidade>(HttpStatus.CREATED);
     }
 	
-	//Analisar necessidade
-	@RequestMapping(value = "/busca/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Especialidade> consultarEspecialidade(@PathVariable("id") long id) {
-
-        Especialidade q = especialidadeService.findById(id);
-        if (q == null) {
-            return new ResponseEntity(new CustomErrorType("Especialidade with id " + id
-                    + " not found"), HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<Especialidade>(q, HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/unidadesComEspecialidade/{codigo}", method = RequestMethod.GET)
-	public ResponseEntity<List> unidadesComEspecialidade(@PathVariable("codigo") int codigo){
-		List<Long> unidades = especialidadeService.unidadesComEsecialidade(codigo);
+	@RequestMapping(value = "/unidadesComEspecialidade/{descricao}", method = RequestMethod.GET)
+	public ResponseEntity<List> unidadesComEspecialidade(@PathVariable("descricao") String descricao){
+		List<Long> unidades = especialidadeService.unidadesComEspecialidade(descricao);
 		if (unidades.isEmpty()) {
 			return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
 		} return new ResponseEntity<List>(unidades, HttpStatus.OK);
