@@ -19,15 +19,7 @@ public interface UnidadeSaudeRepository extends JpaRepository<UnidadeSaude,  Lon
 	 */
 	UnidadeSaude findById(Long id);
 	
-	/**
-	 * Serviço que retorna uma única unidade de saude a partir do bairro.
-	 * 
-	 * @param bairro
-	 * @return unidade de saude com bairro especificado
-	 */
 
 	List<UnidadeSaude> findByBairro(String bairro);
-	
-	
 	
 }

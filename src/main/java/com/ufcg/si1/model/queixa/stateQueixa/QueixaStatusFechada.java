@@ -24,6 +24,7 @@ public class QueixaStatusFechada extends QueixaState {
 
     @Override
     public QueixaState fechar() throws QueixaStatusException {
+        //TODO: ver essa exception
         throw new QueixaStatusException("A queixa já está fechada.");
     }
 

@@ -74,7 +74,6 @@ public class Queixa {
 	}
 
 
-
 	public void abrir() throws QueixaException {
 
 		this.situacao = this.situacao.abrir();

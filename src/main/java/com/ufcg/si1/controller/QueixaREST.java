@@ -24,8 +24,6 @@ import com.ufcg.si1.service.QueixaService;
 @CrossOrigin
 public class QueixaREST {
 
-    @Autowired
-    private QueixaService queixaService;
 
     @Autowired
     private Prefeitura prefeitura;

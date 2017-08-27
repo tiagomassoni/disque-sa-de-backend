@@ -1,5 +1,7 @@
 package com.ufcg.si1.controller.prefeitura;
 
+import com.ufcg.si1.exceptions.AdministradorException;
+import com.ufcg.si1.model.Administrador;
 import com.ufcg.si1.model.form.QueixaForm;
 import com.ufcg.si1.model.queixa.Queixa;
 import com.ufcg.si1.exceptions.QueixaException;
@@ -24,6 +26,12 @@ public interface Prefeitura {
     Queixa deleteQueixa(Long id) throws QueixaException;
 
     Queixa fecharQueixa (Long id, String comentario) throws QueixaException;
+
+    Administrador realizaLogin(Administrador adm) throws AdministradorException;
+
+    Administrador adicionaAdministrador(Administrador adm) throws AdministradorException;
+
+    Collection<Administrador> getAllAdministrador();
 
 
 }

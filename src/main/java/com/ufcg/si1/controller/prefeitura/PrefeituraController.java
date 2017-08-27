@@ -1,12 +1,12 @@
 package com.ufcg.si1.controller.prefeitura;
 
-import com.ufcg.si1.exceptions.QueixaNotEqualsException;
+import com.ufcg.si1.exceptions.*;
+import com.ufcg.si1.model.Administrador;
 import com.ufcg.si1.model.form.QueixaForm;
 import com.ufcg.si1.model.queixa.Queixa;
+import com.ufcg.si1.service.AdministradorService;
 import com.ufcg.si1.service.QueixaService;
 import com.ufcg.si1.service.factory.QueixaFactory;
-import com.ufcg.si1.exceptions.QueixaException;
-import com.ufcg.si1.exceptions.QueixaInexistenteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -22,6 +22,8 @@ public class PrefeituraController implements Prefeitura {
 
     @Autowired
     private QueixaService queixaService;
+    @Autowired
+    private AdministradorService administradorService;
 
     @Override
     public Queixa abrirQueixa(QueixaForm queixaForm) throws QueixaException {
@@ -96,6 +98,26 @@ public class PrefeituraController implements Prefeitura {
             throw new QueixaInexistenteException();
         }
 
+    }
+
+    @Override
+    public Administrador realizaLogin(Administrador adm) throws AdministradorException {
+        Administrador adminLogado = administradorService.realizarLogin(adm);
+        if (adminLogado != null){
+            return adminLogado;
+        }else{
+            throw new AdministradorException("deu erro no login");
+        }
+    }
+
+    @Override
+    public Administrador adicionaAdministrador(Administrador adm) throws AdministradorException {
+        return administradorService.addNovoAdministrador(adm);
+    }
+
+    @Override
+    public Collection<Administrador> getAllAdministrador() {
+        return administradorService.getAllAdministrador();
     }
 
 }
