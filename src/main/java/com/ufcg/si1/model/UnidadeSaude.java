@@ -3,44 +3,32 @@ package com.ufcg.si1.model;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.*;
+
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = PostoSaude.class, name = "posto")
+        @JsonSubTypes.Type(value = PostoSaude.class, name = "posto"),
+        @JsonSubTypes.Type(value = HospitalAdapter.class, name = "hospital")
 })
+
+
+@Entity
 public class UnidadeSaude {
-    private int codigo;
 
-    private String descricao;
+    private Long id; 
+    private String bairro;
+    private List<Especialidade> especialidades;
 
-    private List especialidades = new ArrayList();
-
-    private long [] numeroQueixas = new long[1000];
-    int contador = 0;
-
-    public UnidadeSaude(String descricao) {
-        this.codigo = 0; // gerado no repositorio
-        this.descricao = descricao;
+    public void setEspecialidades(List<Especialidade> especialidades){
+        this.especialidades = especialidades;
     }
-    public UnidadeSaude(){
-    }
-
-    public void addQueixaProxima(long id) {
-        if (this instanceof PostoSaude){
-            numeroQueixas[contador++] = id;
-        }
-    }
-
-    public String pegaDescricao() {
-        return this.descricao;
-    }
-
-    public void mudaDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
+    
+    
+    @Column(name="especialidades", updatable = false)
+    @OneToMany(cascade=CascadeType.ALL)
     public List<Especialidade> getEspecialidades() {
         return this.especialidades;
     }
@@ -49,12 +37,24 @@ public class UnidadeSaude {
         this.especialidades.add(esp);
     }
 
-    public int pegaCodigo() {
-        return this.codigo;
-    }
+    @Id 
+    @GeneratedValue(strategy=GenerationType.TABLE) 
+    @Column(name = "id", updatable = false)
+	public Long getId() {
+		return id;
+	}
 
-    public void mudaCodigo(int cod) {
-        this.codigo = cod;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+    @Column(name ="bairro", updatable = false)
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
 
 }
