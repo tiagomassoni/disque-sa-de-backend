@@ -32,27 +32,6 @@ public class UnidadeRest {
 	private UnidadeSaudeService unidadeSaudeService;
 
 	/**
-	 * URI do recurso: /unidade/especialidade
-	 *
-	 * Método de acesso GET para listar todas as especialidades da
-	 * unidade.
-	 * @return Response com o sucesso ou não da requisição. Para o
-	 * 		   caso de sucesso, o recurso requisitado também será
-	 * 		   enviado.
-	 */
-	@RequestMapping(value = "/especialidade", method = RequestMethod.GET)
-	public ResponseEntity<?> consultaEspecialidadeporUnidadeSaude(@RequestBody Long codigoUnidadeSaude) {
-
-		List<Especialidade> especialidades = unidadeSaudeService.especialidadesPorUnidade(codigoUnidadeSaude);
-
-		if (!especialidades.isEmpty()) {
-			return new ResponseEntity<>(especialidades, HttpStatus.OK);
-		}
-
-		return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
-	}
-
-	/**
 	 * URI do recurso: /unidade
 	 *
 	 * Método de acesso GET para listar todas as unidades cadastradas
@@ -63,8 +42,6 @@ public class UnidadeRest {
 	 */
 	@RequestMapping(value = "/todasAsUnidades", method = RequestMethod.GET)
 	public ResponseEntity<Collection<UnidadeSaude>> getAllUnidades() {
-
-
 		Collection<UnidadeSaude> todasUnidades = unidadeSaudeService.getAll();
 
 		if (!todasUnidades.isEmpty()) {
@@ -105,13 +82,12 @@ public class UnidadeRest {
 	 * 		   caso de sucesso, o recurso requisitado também será
 	 * 		   enviado.
 	 */
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> consultarUnidadeSaude(@PathVariable("id") long id) {
+	@RequestMapping(value = "/consultaUnidade/{id}", method = RequestMethod.GET)
+	public ResponseEntity<UnidadeSaude> consultarUnidadeSaude(@PathVariable("id") long id) {
 
 		UnidadeSaude us = unidadeSaudeService.findById(id);
 		if (us == null) {
-			return new ResponseEntity<>(new CustomErrorType("Unidade with id " + id
-					+ " not found"), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<UnidadeSaude>(us,HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(us, HttpStatus.OK);
 	}
@@ -126,15 +102,14 @@ public class UnidadeRest {
 	 * 		   caso de sucesso, o recurso requisitado também será
 	 * 		   enviado.
 	 */
-	@RequestMapping(value="/busca", method= RequestMethod.GET)
-	public ResponseEntity<?> consultarUnidadeSaudePorBairro(@RequestParam(value = "bairro", required = true) String bairro){
+	@RequestMapping(value="/buscaPorBairro", method= RequestMethod.GET)
+	public ResponseEntity<List<UnidadeSaude>> consultarUnidadeSaudePorBairro(@RequestParam(value = "bairro", required = true) String bairro){
 
 		List<UnidadeSaude> unidadesDoBairro = unidadeSaudeService.findByBairro(bairro);
 		if (!unidadesDoBairro.isEmpty()) {
-			return new ResponseEntity<List>(unidadesDoBairro, HttpStatus.OK);
+			return new ResponseEntity<List<UnidadeSaude>>(unidadesDoBairro, HttpStatus.OK);
 		}
-		return new ResponseEntity(new CustomErrorType("Unidade with bairro " + bairro
-				+ " not found"), HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<UnidadeSaude>>(HttpStatus.NOT_FOUND);
 	}
 
 
@@ -149,13 +124,12 @@ public class UnidadeRest {
 	 * 		   enviado.
 	 */
 	@RequestMapping(value = "/medicos/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> calcularMediaMedicoPacienteDia(@PathVariable("id") long id) {
+	public ResponseEntity<ObjWrapper<Double>> calcularMediaMedicoPacienteDia(@PathVariable("id") Long id) {
 
 		UnidadeSaude us = unidadeSaudeService.findById(id);
 
 		if (us != null) {
 			return new ResponseEntity<ObjWrapper<Double>>(new ObjWrapper<Double>(unidadeSaudeService.mediaMedica(us)), HttpStatus.OK);
-
 		}
 		return new ResponseEntity<ObjWrapper<Double>>(HttpStatus.NOT_FOUND);
 
