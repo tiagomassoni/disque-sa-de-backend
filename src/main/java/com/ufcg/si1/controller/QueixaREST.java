@@ -142,7 +142,7 @@ public class QueixaREST {
 
     }
 
-     //TODO: DOCs, não tá passando o comentário da queixa,
+
     @RequestMapping(value = "/fechamento/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Queixa> fecharQueixa(@PathVariable Long id, @RequestBody String comentario) throws QueixaException {
 

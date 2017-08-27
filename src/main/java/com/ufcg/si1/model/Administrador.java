@@ -15,7 +15,6 @@ public class Administrador {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, unique = true)
-
     private Long id;
 
     @Column
@@ -26,6 +25,15 @@ public class Administrador {
 
     @Column
     private String password;
+
+
+    public Administrador(){}
+
+    public Administrador(String nome, String email, String password) {
+        this.nome = nome;
+        this.email = email;
+        this.password = password;
+    }
 
     public String getNome() {
         return nome;
@@ -70,4 +78,15 @@ public class Administrador {
         result = 31 * result + (password != null ? password.hashCode() : 0);
         return result;
     }
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
 }
