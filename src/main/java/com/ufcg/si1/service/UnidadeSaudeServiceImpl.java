@@ -47,15 +47,15 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
 		return unidades.findByBairro(bairro);
 	}
 
-	public Double mediaMedica(UnidadeSaude unidade) {
-		double c = 0.0;
-		if (unidade instanceof PostoSaude)
-			c = ((PostoSaude) unidade).getAtendentes() / ((PostoSaude) unidade).getTaxaDiariaAtendimentos();
-		else if (unidade instanceof HospitalAdapter) {
-			c = ((HospitalAdapter) unidade).getNumeroMedicos() / ((HospitalAdapter) unidade).getNumeroPacientesDia();
-		}
-		return c;
-	}
+//	public Double mediaMedica(UnidadeSaude unidade) {
+//		double c = 0.0;
+//		if (unidade instanceof PostoSaude)
+//			c = ((PostoSaude) unidade).getAtendentes() / ((PostoSaude) unidade).getTaxaDiariaAtendimentos();
+//		else if (unidade instanceof HospitalAdapter) {
+//			c = ((HospitalAdapter) unidade).getNumeroMedicos() / ((HospitalAdapter) unidade).getNumeroPacientesDia();
+//		}
+//		return c;
+//	}
 	
 	public List<Especialidade> especialidadesPorUnidade(Long id) {
 		return findById(id).getEspecialidades();

@@ -50,7 +50,7 @@ public interface UnidadeSaudeService {
 	 */
 	List<UnidadeSaude> findByBairro(String bairro);
 
-	Double mediaMedica(UnidadeSaude unidade);
+	//Double mediaMedica(UnidadeSaude unidade);
 	
 	List<Especialidade> especialidadesPorUnidade(Long id);
 }
