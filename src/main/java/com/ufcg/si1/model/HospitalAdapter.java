@@ -1,7 +1,6 @@
 package com.ufcg.si1.model;
 
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
@@ -18,21 +17,21 @@ public class HospitalAdapter extends UnidadeSaude{
 		this.hospital = new Hospital("", 0, 0); 
 	}
 	
-    @Column(name = "numeroMedicos", updatable = false)
-	public int getNumeroMedicos() {
+   
+	public int getAtendentes() {
         return this.hospital.getNumeroMedicos();
     }
 
-    public void setNumeroMedicos(int atendentes) {
+    public void setAtendentes(int atendentes) {
         this.hospital.setNumeroMedicos(atendentes);
     }
 
-    @Column(name = "numeroPacientesDia", updatable = false)
-    public float getNumeroPacientesDia() {
+    
+    public float getTaxaDiariaAtendimentos() {
         return this.hospital.getNumeroPacientesDia();
     }
 
-    public void setNumeroPacientesDia(float taxaDiariaAtendimentos) {
+    public void setTaxaDiariaAtendimentos(float taxaDiariaAtendimentos) {
         this.hospital.setNumeroPacientesDia(taxaDiariaAtendimentos);;
     }
 	
