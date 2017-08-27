@@ -36,6 +36,35 @@ public class QueixaForm {
 
     private String comentario;
 
+    private String local;
+
+    private String tipoAnimal;
+
+    private String tipoDeQueixa;
+
+    public String getTipoDeQueixa() {
+        return tipoDeQueixa;
+    }
+
+    public void setTipoDeQueixa(String tipoDeQueixa) {
+        this.tipoDeQueixa = tipoDeQueixa;
+    }
+
+    public String getLocal() {
+        return local;
+    }
+
+    public void setLocal(String local) {
+        this.local = local;
+    }
+
+    public String getTipoAnimal() {
+        return tipoAnimal;
+    }
+
+    public void setTipoAnimal(String tipoAnimal) {
+        this.tipoAnimal = tipoAnimal;
+    }
 
     public String getDescricao() {
         return descricao;

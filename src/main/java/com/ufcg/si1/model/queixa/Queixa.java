@@ -1,7 +1,11 @@
 package com.ufcg.si1.model.queixa;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.ufcg.si1.model.HospitalAdapter;
 import com.ufcg.si1.model.Pessoa;
+import com.ufcg.si1.model.PostoSaude;
 import com.ufcg.si1.model.queixa.stateQueixa.QueixaState;
 import com.ufcg.si1.model.queixa.stateQueixa.QueixaStatusAberta;
 import com.ufcg.si1.model.queixa.stateQueixa.STATUS_QUEIXA;
@@ -12,13 +16,19 @@ import javax.persistence.*;
 import java.util.Calendar;
 
 @Entity
-@Table(name = "QUEIXA_TABLE")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "tipoDeQueixa")
+@JsonSubTypes({
+		@JsonSubTypes.Type(value = QueixaAnimal.class, name = "ANIMAL"),
+		@JsonSubTypes.Type(value = QueixaAlimentar.class, name = "ALIMENTAR")
+
+})
 public class Queixa {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "id", nullable = false, unique = true)
-	private Long id;
+	protected Long id;
 
 	@Column(name = "descricao")
 	private String descricao;
@@ -45,18 +55,26 @@ public class Queixa {
     @Temporal(TemporalType.DATE)
     private Calendar publicacaoData;
 
+
+	@Column
+	@Enumerated(EnumType.STRING)
+	private TIPO_QUEIXA tipoQueixa;
+
     //JPA
     public Queixa(){}
 
-
-
-    public Queixa(String descricao, int situacao, String comentario,
-				  Pessoa socilitante) {
+    public Queixa(String descricao, String comentario,
+				  Pessoa socilitante, TIPO_QUEIXA tipo) {
 
 		this.descricao = descricao;
 		this.situacao = new QueixaStatusAberta();
 		this.comentario = comentario;
 		this.solicitante = socilitante;
+		this.status = this.situacao.status();
+		this.comentario = "";
+		this.tipoQueixa = tipo;
+		this.publicacaoData = Calendar.getInstance();
+
 	}
 
 	//FIXME: eu não sei deveria ter esse construtor aqui, acho mais elegante e pode ser usado
@@ -148,21 +166,6 @@ public class Queixa {
         return result;
     }
 
-    //TODO: Código morto
-    private STATUS_QUEIXA verificaQueixa(int situacao){
-
-		STATUS_QUEIXA status;
-		if(situacao == 1){
-			status = STATUS_QUEIXA.ABERTA;
-		}else if(situacao == 2){
-			status = STATUS_QUEIXA.EM_ANDAMENTO;
-		}else{
-			status = STATUS_QUEIXA.FECHADA;
-		}
-		return status;
-
-
-	}
 
 
     public STATUS_QUEIXA getStatus() {
@@ -181,6 +184,12 @@ public class Queixa {
         this.publicacaoData = publicacaoData;
     }
 
+	public TIPO_QUEIXA getTipoQueixa() {
+		return tipoQueixa;
+	}
 
+	public void setTipoQueixa(TIPO_QUEIXA tipoQueixa) {
+		this.tipoQueixa = tipoQueixa;
+	}
 
 }
