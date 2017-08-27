@@ -10,14 +10,10 @@ import java.util.List;
 
 public interface EspecialidadeService {
 
-    List<Especialidade> getListaEspecialidade();
-
     void insere(Especialidade esp);
-
-    boolean existe(int codigo);
 
 	Especialidade findById(long id);
 	
-	List<Long> unidadesComEsecialidade(int codigo);
+	List<Long> unidadesComEspecialidade(String descricao);
 
 }

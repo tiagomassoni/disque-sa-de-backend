@@ -16,24 +16,10 @@ public class EspecialidadeServiceImpl implements EspecialidadeService {
 	@Autowired
 	private EspecialidadeRepository especialidadeRepository;
 
-	//Este método ainda nao faz sentido pra atual implementação,
-	//mas pode fazer caso a estratégia mude
-    @Override
-    public List<Especialidade> getListaEspecialidade() {
-    	return especialidadeRepository.findAll();
-    }
-
     @Override
     public void insere(Especialidade esp){
+    	esp.setDescricao(esp.getDescricao().toLowerCase());
     	especialidadeRepository.save(esp);
-    }
-
-    //Assim como esse também nao
-    @Override
-    public boolean existe(int codigo) {
-        if(especialidadeRepository.findByCodigo(codigo) != null) {
-        	return true;
-        } return false;
     }
 
 	@Override
@@ -42,8 +28,8 @@ public class EspecialidadeServiceImpl implements EspecialidadeService {
 	}
 
 	@Override
-	public List<Long> unidadesComEsecialidade(int codigo) {
-		List<Especialidade> esp = especialidadeRepository.findByCodigo(codigo);
+	public List<Long> unidadesComEspecialidade(String descricao) {
+		List<Especialidade> esp = especialidadeRepository.findByDescricao(descricao.toLowerCase());
 		List<Long> idUnidades = new ArrayList<>();
 		
 		for (Especialidade especialidade: esp) {
