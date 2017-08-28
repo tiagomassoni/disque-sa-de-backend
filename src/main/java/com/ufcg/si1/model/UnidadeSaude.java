@@ -3,58 +3,74 @@ package com.ufcg.si1.model;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.*;
+
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = PostoSaude.class, name = "posto")
-})
-public class UnidadeSaude {
-    private int codigo;
+@JsonSubTypes({ @JsonSubTypes.Type(value = PostoSaude.class, name = "posto"),
+		@JsonSubTypes.Type(value = HospitalAdapter.class, name = "hospital") })
 
-    private String descricao;
+@Entity
+public abstract class UnidadeSaude {
 
-    private List especialidades = new ArrayList();
+	private Long id;
+	private String bairro;
+	private List<Especialidade> especialidades;
+	private int atendentes;
+	private float taxaDiariaAtendimentos;
 
-    private long [] numeroQueixas = new long[1000];
-    int contador = 0;
+	public void setEspecialidades(List<Especialidade> especialidades) {
+		this.especialidades = especialidades;
+	}
 
-    public UnidadeSaude(String descricao) {
-        this.codigo = 0; // gerado no repositorio
-        this.descricao = descricao;
-    }
-    public UnidadeSaude(){
-    }
+	@Column(name = "especialidades", updatable = false)
+	@OneToMany(cascade = CascadeType.ALL)
+	public List<Especialidade> getEspecialidades() {
+		return this.especialidades;
+	}
 
-    public void addQueixaProxima(long id) {
-        if (this instanceof PostoSaude){
-            numeroQueixas[contador++] = id;
-        }
-    }
+	public void adicionarEspecialidade(Especialidade esp) {
+		this.especialidades.add(esp);
+	}
 
-    public String pegaDescricao() {
-        return this.descricao;
-    }
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	@Column(name = "id", updatable = false)
+	public Long getId() {
+		return id;
+	}
 
-    public void mudaDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public List<Especialidade> getEspecialidades() {
-        return this.especialidades;
-    }
+	@Column(name = "bairro", updatable = false)
+	public String getBairro() {
+		return bairro;
+	}
 
-    public void adicionarEspecialidade(Especialidade esp) {
-        this.especialidades.add(esp);
-    }
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
 
-    public int pegaCodigo() {
-        return this.codigo;
-    }
+	@Column(name = "atendentes", updatable = false)
+	public int getAtendentes() {
+		return atendentes;
+	}
 
-    public void mudaCodigo(int cod) {
-        this.codigo = cod;
-    }
+	public void setAtendentes(int atendentes) {
+		this.atendentes = atendentes;
+	}
+
+	@Column(name = "taxaDiariaAtendimentos", updatable = false)
+	public float getTaxaDiariaAtendimentos() {
+		return taxaDiariaAtendimentos;
+	}
+
+	public void setTaxaDiariaAtendimentos(float taxaDiariaAtendimentos) {
+		this.taxaDiariaAtendimentos = taxaDiariaAtendimentos;
+	}
 
 }
