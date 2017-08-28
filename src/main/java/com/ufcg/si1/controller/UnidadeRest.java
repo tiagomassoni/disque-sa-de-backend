@@ -102,8 +102,8 @@ public class UnidadeRest {
 	 * 		   caso de sucesso, o recurso requisitado também será
 	 * 		   enviado.
 	 */
-	@RequestMapping(value="/buscaPorBairro", method= RequestMethod.GET)
-	public ResponseEntity<List<UnidadeSaude>> consultarUnidadeSaudePorBairro(@RequestParam(value = "bairro", required = true) String bairro){
+	@RequestMapping(value="/buscaPorBairro/{bairro}", method= RequestMethod.GET)
+	public ResponseEntity<List<UnidadeSaude>> consultarUnidadeSaudePorBairro(@PathVariable("bairro") String bairro){
 
 		List<UnidadeSaude> unidadesDoBairro = unidadeSaudeService.findByBairro(bairro);
 		if (!unidadesDoBairro.isEmpty()) {
@@ -111,7 +111,6 @@ public class UnidadeRest {
 		}
 		return new ResponseEntity<List<UnidadeSaude>>(HttpStatus.NOT_FOUND);
 	}
-
 
 
 	/**
