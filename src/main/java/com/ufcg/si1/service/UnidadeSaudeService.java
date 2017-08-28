@@ -49,8 +49,11 @@ public interface UnidadeSaudeService {
 	 * @return Unidade que pertence ao bairro especificado
 	 */
 	List<UnidadeSaude> findByBairro(String bairro);
-
-	//Double mediaMedica(UnidadeSaude unidade);
+	/**
+	 * 
+	 * @param unidade
+	 * @return Media de quantas pessoas cada atendente ou medico atende por dia.
+	 */
+	Double mediaMedica(UnidadeSaude unidade);
 	
-	List<Especialidade> especialidadesPorUnidade(Long id);
 }

@@ -122,15 +122,15 @@ public class UnidadeRest {
 	 * 		   caso de sucesso, o recurso requisitado também será
 	 * 		   enviado.
 	 */
-//	@RequestMapping(value = "/medicos/{id}", method = RequestMethod.GET)
-//	public ResponseEntity<ObjWrapper<Double>> calcularMediaMedicoPacienteDia(@PathVariable("id") Long id) {
-//
-//		UnidadeSaude us = unidadeSaudeService.findById(id);
-//
-//		if (us != null) {
-//			return new ResponseEntity<ObjWrapper<Double>>(new ObjWrapper<Double>(unidadeSaudeService.mediaMedica(us)), HttpStatus.OK);
-//		}
-//		return new ResponseEntity<ObjWrapper<Double>>(HttpStatus.NOT_FOUND);
-//
-//	}
+	@RequestMapping(value = "/medicos/{id}", method = RequestMethod.GET)
+	public ResponseEntity<ObjWrapper<Double>> calcularMediaMedicoPacienteDia(@PathVariable("id") Long id) {
+
+		UnidadeSaude us = unidadeSaudeService.findById(id);
+
+		if (us != null) {
+			return new ResponseEntity<ObjWrapper<Double>>(new ObjWrapper<Double>(unidadeSaudeService.mediaMedica(us)), HttpStatus.OK);
+		}
+		return new ResponseEntity<ObjWrapper<Double>>(HttpStatus.NOT_FOUND);
+
+	}
 }
