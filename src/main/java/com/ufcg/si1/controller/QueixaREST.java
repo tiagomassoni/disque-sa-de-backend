@@ -58,10 +58,10 @@ public class QueixaREST {
      *
      * Método de submissão POST para cadastrar uma nova queixa.
      * @param queixa
-     * 				Queixa a ser cadastrada
+     * 		Queixa a ser cadastrada
      *
      * @return
-     * 			Response com o sucesso ou não da requisição
+     * 		Response com o sucesso ou não da requisição
      */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Queixa> abrirQueixa(@RequestBody QueixaForm queixa) throws QueixaException {
@@ -74,7 +74,6 @@ public class QueixaREST {
         } catch (QueixaException e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
 
     }
 
